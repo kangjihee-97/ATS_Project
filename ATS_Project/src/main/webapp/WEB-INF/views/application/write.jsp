@@ -508,7 +508,7 @@ body {
 				</div>
 
 				<div class="field">
-					<label>자기소개 및 지원 동기</label>
+					<label>지원 동기</label>
 					<textarea name="coverLetter" placeholder="자유롭게 작성해 주세요"></textarea>
 				</div>
 

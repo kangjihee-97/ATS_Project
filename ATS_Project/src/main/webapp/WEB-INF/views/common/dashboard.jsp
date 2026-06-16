@@ -647,7 +647,7 @@ body {
 			<div class="card" id="aiCard">
 				<div class="card-head">
 					<div class="card-title">🤖 AI 채용 분석</div>
-					<div class="card-badge" id="aiBadge">Claude AI</div>
+					<div class="card-badge" id="aiBadge">Gemini AI</div>
 				</div>
 				<!-- 초기 상태 -->
 				<div id="aiDefault">
