@@ -7,6 +7,34 @@
 <meta charset="UTF-8">
 <title>ATS | 지원자 상세</title>
 <style>
+#resumeTextBox::-webkit-scrollbar {
+	width: 6px;
+}
+
+#resumeTextBox::-webkit-scrollbar-track {
+	background: #f5ede3;
+	border-radius: 4px;
+}
+
+#resumeTextBox::-webkit-scrollbar-thumb {
+	background: #e0c8a0;
+	border-radius: 4px;
+}
+
+#coverBox::-webkit-scrollbar {
+	width: 6px;
+}
+
+#coverBox::-webkit-scrollbar-track {
+	background: #f5ede3;
+	border-radius: 4px;
+}
+
+#coverBox::-webkit-scrollbar-thumb {
+	background: #e0c8a0;
+	border-radius: 4px;
+}
+
 @import
 	url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap')
 	;
@@ -48,17 +76,6 @@ body {
 	display: flex;
 	align-items: center;
 	gap: 10px
-}
-
-.sb-logo-box {
-	width: 38px;
-	height: 38px;
-	border-radius: 10px;
-	background: linear-gradient(135deg, #d4a017, #e8c547);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 18px
 }
 
 .sb-logo-name {
@@ -187,7 +204,7 @@ body {
 
 .detail-wrap {
 	display: grid;
-	grid-template-columns: 1fr 1.2fr;
+	grid-template-columns: 1fr 1.4fr;
 	gap: 20px;
 	align-items: start
 }
@@ -199,7 +216,7 @@ body {
 	border: 1px solid #f0e0cc;
 	margin-bottom: 20px
 }
-/* 프로필 카드 */
+
 .profile-top {
 	display: flex;
 	align-items: center;
@@ -262,6 +279,16 @@ body {
 	color: #c2410c
 }
 
+.s-PASSED {
+	background: #dcfce7;
+	color: #166534
+}
+
+.s-REJECTED {
+	background: #fee2e2;
+	color: #991b1b
+}
+
 .s-FINAL {
 	background: #dcfce7;
 	color: #166534
@@ -309,12 +336,12 @@ body {
 	background: #fdf8f3;
 	border-radius: 10px;
 	padding: 16px;
-	font-size: 13.5px;
+	font-size: 13px;
 	color: #6b4025;
 	line-height: 1.8;
-	white-space: pre-wrap;
 	border: 1px solid #f0e0cc;
-	min-height: 120px
+	overflow-x: hidden;
+	text-align: left;
 }
 
 .btn-group {
@@ -333,7 +360,7 @@ body {
 	font-weight: 500;
 	text-decoration: none
 }
-/* 단계 변경 */
+
 .stage-section {
 	margin-top: 18px
 }
@@ -367,6 +394,16 @@ body {
 	cursor: pointer;
 	font-family: 'Noto Sans KR', sans-serif
 }
+
+@
+keyframes spin {from { transform:rotate(0deg)
+	
+}
+
+to {
+	transform: rotate(360deg)
+}
+}
 </style>
 </head>
 <body>
@@ -384,6 +421,7 @@ body {
 					.charAt(0))
 			: "?";
 	%>
+
 	<nav class="sidebar">
 		<div class="sb-logo">
 			<div class="sb-logo-row">
@@ -417,8 +455,8 @@ body {
 			<li><a href="/stats"><span class="ico">📊</span>통계 리포트</a></li>
 			<%
 			if (isMaster) {
-			%><li><a href="/admin/users"><span class="ico">⚙️</span>회원
-					관리</a></li>
+			%>
+			<li><a href="/admin/users"><span class="ico">⚙️</span>회원 관리</a></li>
 			<%
 			}
 			%>
@@ -533,153 +571,215 @@ body {
 				</div>
 			</div>
 
-			<!-- 오른쪽: 자기소개서 + AI 분석 -->
+			<!-- 오른쪽: 자기소개서 + 이력서 + AI 분석 -->
 			<div>
+				<!-- 자기소개서 + 이력서 2분할 카드 -->
 				<div class="card">
-					<div class="section-title">자기소개 및 지원 동기</div>
-					<div class="cover-box" id="coverBox">
-						<c:choose>
-							<c:when test="${not empty app.coverLetter}">${app.coverLetter}</c:when>
-							<c:otherwise>
-								<span style="color: #b08060">작성된 내용이 없습니다.</span>
-							</c:otherwise>
-						</c:choose>
-					</div>
-				</div>
-
-				<!-- AI 분석 카드 -->
-				<div class="card" style="margin-top: 16px" id="aiAnalysisCard">
 					<div
-						style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1.5px solid #f5ede3">
-						<div style="font-size: 14px; font-weight: 600; color: #3d1c02">🤖
-							AI 지원서 분석</div>
-						<span
-							style="font-size: 11px; padding: 3px 10px; border-radius: 20px; background: #f5ede3; color: #8b4513; font-weight: 500"
-							id="aiApBadge">Claude AI</span>
-					</div>
-
-					<!-- 초기 -->
-					<div id="aiApDefault"
-						style="text-align: center; padding: 14px 10px">
-						<div
-							style="font-size: 13px; color: #8b6040; margin-bottom: 14px; line-height: 1.6">
-							자기소개서와 지원자 정보를<br>AI가 분석해드립니다
+						style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+						<!-- 좌: 지원 동기 -->
+						<div>
+							<div class="section-title">지원 동기</div>
+							<div class="cover-box" id="coverBox"
+								style="max-height: 320px; overflow-y: auto; padding: 14px; text-align: left; white-space: normal;">
+								<c:choose>
+									<c:when test="${not empty app.coverLetter}">
+										<div
+											style="font-size: 12px; color: #5a3010; line-height: 1.7; text-align: left; word-break: break-word; overflow-wrap: break-word;">
+											${app.coverLetter}</div>
+									</c:when>
+									<c:otherwise>
+										<div
+											style="text-align: center; padding: 10px 0; color: #b08060; font-size: 13px;">
+											작성된 내용이 없습니다.</div>
+									</c:otherwise>
+								</c:choose>
+							</div>
 						</div>
-						<button onclick="runApplicantAi()"
-							style="width: 100%; padding: 10px; background: linear-gradient(135deg, #3d1c02, #8b4513); color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Noto Sans KR', sans-serif">
-							✨ AI 분석 시작</button>
-					</div>
-
-					<!-- 로딩 -->
-					<div id="aiApLoading"
-						style="display: none; text-align: center; padding: 20px 10px">
-						<div
-							style="font-size: 26px; animation: spin 1.5s linear infinite; display: inline-block">⚙️</div>
-						<div style="font-size: 12px; color: #a07050; margin-top: 8px">분석
-							중입니다...</div>
-					</div>
-
-					<!-- 결과 -->
-					<div id="aiApResult" style="display: none">
-						<div id="aiApText"
-							style="font-size: 12.5px; color: #4a2800; line-height: 1.85; background: #fdf8f3; border-radius: 10px; padding: 14px; border: 1px solid #f0e0cc; white-space: pre-wrap"></div>
-						<div style="display: flex; gap: 8px; margin-top: 10px">
-							<button onclick="runApplicantAi()"
-								style="flex: 1; padding: 8px; background: #f5ede3; color: #8b4513; border: 1.5px solid #e8d5c0; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: 'Noto Sans KR', sans-serif">🔄
-								재분석</button>
-							<button onclick="resetApAi()"
-								style="padding: 8px 14px; background: #fff; color: #b08060; border: 1.5px solid #f0e0cc; border-radius: 8px; font-size: 12px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif">초기화</button>
+						<!-- 우: 첨부 이력서 -->
+						<div>
+							<div class="section-title">첨부 이력서</div>
+							<c:choose>
+								<c:when test="${not empty app.resumeOriginalName}">
+									<div style="text-align: center; margin-bottom: 10px;">
+										<div
+											style="font-size: 12px; font-weight: 700; color: #3d1c02; word-break: break-all; margin-bottom: 6px;">
+											${app.resumeOriginalName}</div>
+										<a href="/application/resume/${app.applicationId}"
+											style="display: inline-block; font-size: 11px; padding: 4px 14px; border-radius: 20px; background: #f5ede3; color: #8b4513; text-decoration: none; font-weight: 500; border: 1px solid #e0c8a0;">
+											📥 파일 열기 </a>
+									</div>
+									<div
+										style="border-top: 1px solid #f0e0cc; margin-bottom: 10px;"></div>
+									<div id="resumeContent"
+										style="white-space: pre-wrap; font-size: 12px; color: #5a3010; line-height: 1.7;">
+										<span style="color: #a07050; font-size: 12px;">불러오는
+											중...</span>
+									</div>
+									<div id="resumeError"
+										style="display: none; color: #991b1b; font-size: 12px;"></div>
+								</c:when>
+								<c:otherwise>
+									<div
+										style="text-align: center; padding: 40px 0; color: #b08060;">
+										<div style="font-size: 13px;">첨부된 이력서가 없습니다.</div>
+									</div>
+								</c:otherwise>
+							</c:choose>
 						</div>
-					</div>
-
-					<!-- 에러 -->
-					<div id="aiApError"
-						style="display: none; text-align: center; padding: 14px 10px">
-						<div
-							style="font-size: 12px; color: #991b1b; background: #fee2e2; border-radius: 8px; padding: 10px; margin-bottom: 10px"
-							id="aiApErrorMsg"></div>
-						<button onclick="runApplicantAi()"
-							style="padding: 8px 16px; background: #f5ede3; color: #8b4513; border: 1.5px solid #e8d5c0; border-radius: 8px; font-size: 12px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif">다시
-							시도</button>
 					</div>
 				</div>
 			</div>
 		</div>
+		</div>
+
+		<!-- AI 분석 카드 -->
+		<div class="card" style="margin-top: 16px" id="aiAnalysisCard">
+			<div
+				style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1.5px solid #f5ede3">
+				<div style="font-size: 14px; font-weight: 600; color: #3d1c02">🤖
+					AI 지원서 분석</div>
+				<span
+					style="font-size: 11px; padding: 3px 10px; border-radius: 20px; background: #f5ede3; color: #8b4513; font-weight: 500"
+					id="aiApBadge">Gemini AI</span>
+			</div>
+			<!-- 초기 -->
+			<div id="aiApDefault" style="text-align: center; padding: 14px 10px">
+				<div
+					style="font-size: 13px; color: #8b6040; margin-bottom: 14px; line-height: 1.6">
+					자기소개서와 지원자 정보를<br>AI가 분석해드립니다
+				</div>
+				<button onclick="runApplicantAi()"
+					style="width: 100%; padding: 10px; background: linear-gradient(135deg, #3d1c02, #8b4513); color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'Noto Sans KR', sans-serif">
+					✨ AI 분석 시작</button>
+			</div>
+			<!-- 로딩 -->
+			<div id="aiApLoading"
+				style="display: none; text-align: center; padding: 20px 10px">
+				<div
+					style="font-size: 26px; animation: spin 1.5s linear infinite; display: inline-block">⚙️</div>
+				<div style="font-size: 12px; color: #a07050; margin-top: 8px">분석
+					중입니다...</div>
+			</div>
+			<!-- 결과 -->
+			<div id="aiApResult" style="display: none">
+				<div id="aiApText"
+					style="font-size: 12.5px; color: #4a2800; line-height: 1.85; background: #fdf8f3; border-radius: 10px; padding: 14px; border: 1px solid #f0e0cc; white-space: pre-wrap"></div>
+				<div style="display: flex; gap: 8px; margin-top: 10px">
+					<button onclick="runApplicantAi()"
+						style="flex: 1; padding: 8px; background: #f5ede3; color: #8b4513; border: 1.5px solid #e8d5c0; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; font-family: 'Noto Sans KR', sans-serif">
+						🔄 재분석</button>
+					<button onclick="resetApAi()"
+						style="padding: 8px 14px; background: #fff; color: #b08060; border: 1.5px solid #f0e0cc; border-radius: 8px; font-size: 12px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif">
+						초기화</button>
+				</div>
+			</div>
+			<!-- 에러 -->
+			<div id="aiApError"
+				style="display: none; text-align: center; padding: 14px 10px">
+				<div
+					style="font-size: 12px; color: #991b1b; background: #fee2e2; border-radius: 8px; padding: 10px; margin-bottom: 10px"
+					id="aiApErrorMsg"></div>
+				<button onclick="runApplicantAi()"
+					style="padding: 8px 16px; background: #f5ede3; color: #8b4513; border: 1.5px solid #e8d5c0; border-radius: 8px; font-size: 12px; cursor: pointer; font-family: 'Noto Sans KR', sans-serif">
+					다시 시도</button>
+			</div>
+		</div>
+		</div>
+		</div>
 	</main>
-	<style>
-.s-PASSED {
-	background: #dcfce7;
-	color: #166534
-}
-
-.s-REJECTED {
-	background: #fee2e2;
-	color: #991b1b
-}
-
-@
-keyframes spin {
-	from {transform: rotate(0deg)
-}
-
-to {
-	transform: rotate(360deg)
-}
-}
-</style>
 
 	<script>
+// 이력서 텍스트 자동 로드
+<c:if test="${not empty app.resumeOriginalName}">
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/application/resume/text/${app.applicationId}')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+        var content = document.getElementById('resumeContent');
+        if (data.error) {
+            content.textContent = '';
+            document.getElementById('resumeError').textContent = data.error;
+            document.getElementById('resumeError').style.display = 'block';
+        } else {
+            content.textContent = data.text;
+        }
+    })
+    .catch(function(){
+        document.getElementById('resumeContent').textContent = '';
+        document.getElementById('resumeError').textContent = '이력서를 불러오지 못했습니다.';
+        document.getElementById('resumeError').style.display = 'block';
+    });
+});
+</c:if>
+
 function showApState(state) {
-  ['aiApDefault','aiApLoading','aiApResult','aiApError'].forEach(function(id){
-    document.getElementById(id).style.display = 'none';
-  });
-  document.getElementById(state).style.display = 'block';
+    ['aiApDefault','aiApLoading','aiApResult','aiApError'].forEach(function(id){
+        document.getElementById(id).style.display = 'none';
+    });
+    document.getElementById(state).style.display = 'block';
 }
 
 function runApplicantAi() {
-  showApState('aiApLoading');
-  document.getElementById('aiApBadge').textContent = '분석 중...';
+    var coverText  = document.getElementById('coverBox').innerText.trim();
+    var resumeEl   = document.getElementById('resumeContent');
+    var resumeText = resumeEl ? resumeEl.textContent.trim() : '';
 
-  var stageMap = {
-    'RECEIVED':'서류접수', 'DOC_PASS':'서류합격',
-    'INTERVIEW1':'1차면접', 'INTERVIEW2':'2차면접',
-    'FINAL':'최종합격', 'FAIL':'불합격'
-  };
-
-  var payload = {
-    name       : '${app.applicantName}',
-    posting    : '${app.postingTitle}',
-    career     : '${app.careerYear}' === '0' ? '신입' : '${app.careerYear}년',
-    stage      : stageMap['${app.stage}'] || '${app.stage}',
-    coverLetter: document.getElementById('coverBox').innerText.trim()
-  };
-
-  fetch('/ai/applicant-report', {
-    method : 'POST',
-    headers: {'Content-Type':'application/json'},
-    body   : JSON.stringify(payload)
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(res){
-    if (res.error) {
-      document.getElementById('aiApErrorMsg').textContent = res.error;
-      showApState('aiApError');
-      document.getElementById('aiApBadge').textContent = '오류';
-    } else {
-      document.getElementById('aiApText').textContent = res.report;
-      showApState('aiApResult');
-      document.getElementById('aiApBadge').textContent = '분석 완료 ✓';
+    var combinedText = '';
+    if (coverText && coverText !== '작성된 내용이 없습니다.') {
+        combinedText += '[자기소개서]\n' + coverText + '\n\n';
     }
-  })
-  .catch(function(){
-    document.getElementById('aiApErrorMsg').textContent = '서버 연결 실패';
-    showApState('aiApError');
-  });
+    if (resumeText) {
+        combinedText += '[이력서]\n' + resumeText;
+    }
+    if (!combinedText.trim()) {
+        alert('자기소개서 또는 이력서가 없어 AI 분석을 진행할 수 없습니다.');
+        return;
+    }
+
+    showApState('aiApLoading');
+    document.getElementById('aiApBadge').textContent = '분석 중...';
+
+    var stageMap = {
+        'RECEIVED':'서류접수','DOC_PASS':'서류합격',
+        'INTERVIEW1':'1차면접','INTERVIEW2':'2차면접',
+        'PASSED':'최종합격','REJECTED':'불합격'
+    };
+
+    var payload = {
+        name       : '${app.applicantName}',
+        posting    : '${app.postingTitle}',
+        career     : '${app.careerYear}' === '0' ? '신입' : '${app.careerYear}년',
+        stage      : stageMap['${app.stage}'] || '${app.stage}',
+        coverLetter: combinedText
+    };
+
+    fetch('/ai/applicant-report', {
+        method : 'POST',
+        headers: {'Content-Type':'application/json'},
+        body   : JSON.stringify(payload)
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(res){
+        if (res.error) {
+            document.getElementById('aiApErrorMsg').textContent = res.error;
+            showApState('aiApError');
+            document.getElementById('aiApBadge').textContent = '오류';
+        } else {
+            document.getElementById('aiApText').textContent = res.report;
+            showApState('aiApResult');
+            document.getElementById('aiApBadge').textContent = '분석 완료 ✓';
+        }
+    })
+    .catch(function(){
+        document.getElementById('aiApErrorMsg').textContent = '서버 연결 실패';
+        showApState('aiApError');
+    });
 }
 
 function resetApAi() {
-  showApState('aiApDefault');
-  document.getElementById('aiApBadge').textContent = 'Claude AI';
+    showApState('aiApDefault');
+    document.getElementById('aiApBadge').textContent = 'Gemini AI';
 }
 </script>
 </body>
