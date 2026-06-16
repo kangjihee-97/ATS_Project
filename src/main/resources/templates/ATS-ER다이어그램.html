@@ -1,0 +1,102 @@
+<h2 class="sr-only">채용 지원자 관리 시스템 ER 다이어그램 — 6개 테이블 관계도</h2>
+<style>
+#erd-ats svg { width: 100% !important; }
+</style>
+<div id="erd-ats" style="padding: 0.5rem 0;"></div>
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+await document.fonts.ready;
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'base',
+  fontFamily: '"Anthropic Sans", sans-serif',
+  themeVariables: {
+    darkMode: dark,
+    fontSize: '13px',
+    fontFamily: '"Anthropic Sans", sans-serif',
+    lineColor: dark ? '#9c9a92' : '#73726c',
+    textColor: dark ? '#c2c0b6' : '#3d3d3a',
+    primaryColor: dark ? '#2a2a28' : '#f5f4f0',
+    primaryBorderColor: dark ? '#4a4a46' : '#c8c6bc',
+  },
+});
+const diagram = `erDiagram
+  USERS {
+    varchar user_id PK
+    varchar password
+    varchar name
+    varchar email
+    varchar phone
+    varchar role
+    varchar status
+    date created_at
+  }
+
+  JOB_POSTING {
+    number posting_id PK
+    varchar title
+    varchar department
+    number headcount
+    varchar requirements
+    varchar preferred
+    date deadline
+    varchar status
+    date created_at
+  }
+
+  APPLICATION {
+    number application_id PK
+    number posting_id FK
+    varchar applicant_name
+    varchar email
+    varchar phone
+    number career_year
+    clob cover_letter
+    varchar resume_path
+    varchar stage
+    date applied_at
+  }
+
+  STAGE_HISTORY {
+    number history_id PK
+    number application_id FK
+    varchar stage
+    varchar changed_by FK
+    varchar note
+    date changed_at
+  }
+
+  INTERVIEW_EVAL {
+    number eval_id PK
+    number application_id FK
+    varchar interviewer_id FK
+    number tech_score
+    number comm_score
+    number solve_score
+    clob comment
+    varchar recommend
+    date eval_date
+  }
+
+  INTERVIEW_SCHEDULE {
+    number schedule_id PK
+    number application_id FK
+    varchar interviewer_id FK
+    date scheduled_at
+    varchar location
+    number round
+    varchar status
+  }
+
+  JOB_POSTING ||--o{ APPLICATION : "공고별 지원"
+  APPLICATION ||--o{ STAGE_HISTORY : "단계 변경 이력"
+  APPLICATION ||--o{ INTERVIEW_EVAL : "면접 평가"
+  APPLICATION ||--o{ INTERVIEW_SCHEDULE : "면접 일정"
+  USERS ||--o{ STAGE_HISTORY : "변경 처리"
+  USERS ||--o{ INTERVIEW_EVAL : "평가 작성"
+  USERS ||--o{ INTERVIEW_SCHEDULE : "면접관 배정"
+`;
+const { svg } = await mermaid.render('erd-ats-svg', diagram);
+document.getElementById('erd-ats').innerHTML = svg;
+</script>

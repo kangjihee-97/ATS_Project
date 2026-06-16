@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ats.project.dao.ScheduleDAO">
+
+	<!-- 전체 면접 일정 -->
+	<select id="getScheduleList" resultType="ScheduleVO">
+		SELECT s.schedule_id, s.application_id, s.scheduled_at,
+		s.location, s.round, s.status,
+		a.applicant_name, j.title AS posting_title,
+		u.name AS interviewer_name, s.interviewer_id
+		FROM interview_schedule s
+		JOIN application a ON s.application_id = a.application_id
+		JOIN job_posting j ON a.posting_id = j.posting_id
+		JOIN users u ON s.interviewer_id = u.user_id
+		ORDER BY s.scheduled_at DESC
+	</select>
+
+	<!-- 면접관별 일정 -->
+	<select id="getScheduleByInterviewer" parameterType="String"
+		resultType="ScheduleVO">
+		SELECT s.schedule_id, s.application_id, s.scheduled_at,
+		s.location, s.round, s.status,
+		a.applicant_name, j.title AS posting_title,
+		u.name AS interviewer_name
+		FROM interview_schedule s
+		JOIN application a ON s.application_id = a.application_id
+		JOIN job_posting j ON a.posting_id = j.posting_id
+		JOIN users u ON s.interviewer_id = u.user_id
+		WHERE s.interviewer_id = #{interviewerId}
+		ORDER BY s.scheduled_at ASC
+	</select>
+
+	<!-- 면접 일정 상세 -->
+	<select id="getSchedule" parameterType="int"
+		resultType="ScheduleVO">
+		SELECT s.*, a.applicant_name, j.title AS posting_title,
+		u.name AS interviewer_name
+		FROM interview_schedule s
+		JOIN application a ON s.application_id = a.application_id
+		JOIN job_posting j ON a.posting_id = j.posting_id
+		JOIN users u ON s.interviewer_id = u.user_id
+		WHERE s.schedule_id = #{scheduleId}
+	</select>
+
+	<!-- 면접 일정 등록 -->
+	<insert id="insertSchedule" parameterType="ScheduleVO"
+		useGeneratedKeys="true" keyProperty="scheduleId">
+		INSERT INTO interview_schedule
+		(application_id, interviewer_id, scheduled_at,
+		location, round, status, created_at)
+		VALUES (#{applicationId}, #{interviewerId}, #{scheduledAt},
+		#{location}, #{round}, 'SCHEDULED', NOW())
+	</insert>
+
+	<!-- 면접 일정 수정 -->
+	<update id="updateSchedule" parameterType="ScheduleVO">
+		UPDATE interview_schedule
+		SET interviewer_id = #{interviewerId},
+		scheduled_at = #{scheduledAt},
+		location = #{location},
+		round = #{round}
+		WHERE schedule_id = #{scheduleId}
+	</update>
+
+	<!-- 면접 완료 처리 -->
+	<update id="doneSchedule" parameterType="int">
+		UPDATE interview_schedule SET status = 'DONE'
+		WHERE schedule_id = #{scheduleId}
+	</update>
+
+	<!-- 면접 취소 처리 -->
+	<update id="cancelSchedule" parameterType="int">
+		UPDATE interview_schedule SET status = 'CANCELLED'
+		WHERE schedule_id = #{scheduleId}
+	</update>
+
+	<!-- 시간 충돌 확인 -->
+	<select id="checkConflict" parameterType="ScheduleVO"
+		resultType="int">
+		SELECT COUNT(*) FROM interview_schedule
+		WHERE interviewer_id = #{interviewerId}
+		AND status != 'CANCELLED'
+		AND ABS(TIMESTAMPDIFF(MINUTE, scheduled_at, #{scheduledAt})) &lt; 60
+		AND schedule_id != #{scheduleId}
+	</select>
+
+	<!-- 면접관 목록 -->
+	<select id="getInterviewerList" resultType="UserVO">
+		SELECT user_id, name, email
+		FROM users
+		WHERE role = 'INTERVIEWER' AND status = 'ACTIVE'
+		ORDER BY name ASC
+	</select>
+
+	<!-- 지원자 목록 (드롭다운용) -->
+	<select id="getApplicationList" resultType="ApplicationVO">
+		SELECT a.application_id,
+		a.applicant_name,
+		a.email,
+		j.title AS posting_title
+		FROM application a
+		JOIN job_posting j ON a.posting_id = j.posting_id
+		WHERE a.stage NOT IN ('PASSED','REJECTED')
+		ORDER BY a.applied_at DESC
+	</select>
+
+</mapper>

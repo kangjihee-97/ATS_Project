@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ats.project.dao.NoticeDAO">
+
+    <select id="getNoticeList" resultType="NoticeVO">
+        SELECT n.notice_id, n.title, n.content,
+               n.created_by, u.name AS created_by_name,
+               n.is_pinned, n.created_at, n.updated_at
+        FROM   notice n
+        LEFT JOIN users u ON n.created_by = u.user_id
+        ORDER  BY n.is_pinned DESC, n.created_at DESC
+    </select>
+
+    <select id="getNotice" parameterType="int" resultType="NoticeVO">
+        SELECT n.notice_id, n.title, n.content,
+               n.created_by, u.name AS created_by_name,
+               n.is_pinned, n.created_at, n.updated_at
+        FROM   notice n
+        LEFT JOIN users u ON n.created_by = u.user_id
+        WHERE  n.notice_id = #{noticeId}
+    </select>
+
+    <insert id="insertNotice" parameterType="NoticeVO"
+            useGeneratedKeys="true" keyProperty="noticeId">
+        INSERT INTO notice (title, content, created_by, is_pinned, created_at, updated_at)
+        VALUES (#{title}, #{content}, #{createdBy}, #{isPinned}, NOW(), NOW())
+    </insert>
+
+    <update id="updateNotice" parameterType="NoticeVO">
+        UPDATE notice
+        SET title=#{title}, content=#{content},
+            is_pinned=#{isPinned}, updated_at=NOW()
+        WHERE notice_id=#{noticeId}
+    </update>
+
+    <delete id="deleteNotice" parameterType="int">
+        DELETE FROM notice WHERE notice_id=#{noticeId}
+    </delete>
+
+</mapper>

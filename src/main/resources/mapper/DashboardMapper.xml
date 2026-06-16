@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ats.project.dao.DashboardDAO">
+
+	<select id="getTotalCount" resultType="int">
+		SELECT COUNT(*) FROM
+		application
+	</select>
+
+	<select id="getReceivedCount" resultType="int">
+		SELECT COUNT(*) FROM
+		application WHERE stage = 'RECEIVED'
+	</select>
+
+	<select id="getDocPassCount" resultType="int">
+		SELECT COUNT(*) FROM
+		application WHERE stage = 'DOC_PASS'
+	</select>
+
+	<select id="getInterviewCount" resultType="int">
+		SELECT COUNT(*) FROM
+		application
+		WHERE stage IN ('INTERVIEW1','INTERVIEW2')
+	</select>
+
+	<select id="getFinalCount" resultType="int">
+		SELECT COUNT(*) FROM application WHERE stage = 'PASSED'
+	</select>
+
+	<select id="getFailCount" resultType="int">
+		SELECT COUNT(*) FROM application WHERE stage = 'REJECTED'
+	</select>
+
+	<select id="getTodayInterview" resultType="int">
+		SELECT COUNT(*) FROM
+		interview_schedule
+		WHERE DATE(scheduled_at) = CURDATE()
+		AND status =
+		'SCHEDULED'
+	</select>
+
+	<select id="getOpenPostings" resultType="int">
+		SELECT COUNT(*) FROM
+		job_posting WHERE status = 'OPEN'
+	</select>
+
+	<select id="getPostingStats" resultType="map">
+		SELECT j.title,
+		COUNT(a.application_id) AS cnt
+		FROM job_posting j
+		LEFT JOIN application
+		a ON j.posting_id = a.posting_id
+		WHERE j.status = 'OPEN'
+		GROUP BY
+		j.posting_id, j.title
+		ORDER BY cnt DESC
+		LIMIT 5
+	</select>
+
+	<select id="getRecentList" resultType="ApplicationVO">
+		SELECT a.application_id,
+		a.applicant_name,
+		a.career_year, a.stage,
+		j.title AS posting_title
+		FROM
+		application a
+		JOIN job_posting j ON a.posting_id = j.posting_id
+		ORDER BY
+		a.applied_at DESC
+		LIMIT 8
+	</select>
+
+	<select id="getMonthlyStats" resultType="map">
+		SELECT
+		DATE_FORMAT(applied_at,'%Y-%m') AS month,
+		COUNT(*) AS cnt
+		FROM
+		application
+		WHERE applied_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
+		GROUP
+		BY DATE_FORMAT(applied_at,'%Y-%m')
+		ORDER BY month ASC
+	</select>
+
+</mapper>
