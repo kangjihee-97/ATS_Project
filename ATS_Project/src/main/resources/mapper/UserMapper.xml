@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ats.project.dao.UserDAO">
+
+	<select id="login" parameterType="UserVO" resultType="UserVO">
+		SELECT
+		user_id, password, name, email, phone, role, status
+		FROM users
+		WHERE
+		user_id = #{userId}
+		AND status = 'ACTIVE'
+	</select>
+
+	<select id="idCheck" parameterType="String" resultType="int">
+		SELECT
+		COUNT(*) FROM users WHERE user_id = #{userId}
+	</select>
+
+	<select id="checkPhoneDup" parameterType="String"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM users
+		WHERE REPLACE(phone, '-', '') =
+		REPLACE(#{phone}, '-', '')
+	</select>
+
+	<select id="checkEmailDup" parameterType="String"
+		resultType="int">
+		SELECT COUNT(*) FROM users WHERE email = #{email}
+	</select>
+
+	<insert id="register" parameterType="UserVO">
+		INSERT INTO users (user_id,
+		password, name, email, phone, role, status,
+		created_at)
+		VALUES
+		(#{userId}, #{password}, #{name}, #{email}, #{phone}, 'TESTER',
+		'ACTIVE', NOW())
+	</insert>
+	<!-- 아이디 + 이메일로 본인 확인 -->
+	<select id="findUserByIdAndEmail" parameterType="UserVO"
+		resultType="UserVO">
+		SELECT user_id, name FROM users
+		WHERE user_id = #{userId}
+		AND email = #{email}
+		AND status = 'ACTIVE'
+	</select>
+	<select id="getUserList" resultType="UserVO">
+		SELECT user_id, name, email,
+		phone, role, status, created_at
+		FROM users ORDER BY created_at DESC
+	</select>
+
+	<update id="updateUserRole" parameterType="UserVO">
+		UPDATE users SET role
+		= #{role} WHERE user_id = #{userId}
+	</update>
+
+	<update id="updateUserStatus" parameterType="UserVO">
+		UPDATE users SET
+		status = #{status} WHERE user_id = #{userId}
+	</update>
+
+	<update id="clearJobPostingRef" parameterType="String">
+		UPDATE job_posting
+		SET created_by = NULL WHERE created_by = #{userId}
+	</update>
+
+	<update id="clearStageHistoryRef" parameterType="String">
+		UPDATE
+		stage_history SET changed_by = NULL WHERE changed_by = #{userId}
+	</update>
+
+	<delete id="deleteUserEvals" parameterType="String">
+		DELETE FROM
+		interview_eval WHERE interviewer_id = #{userId}
+	</delete>
+
+	<delete id="deleteUserSchedules" parameterType="String">
+		DELETE FROM
+		interview_schedule WHERE interviewer_id = #{userId}
+	</delete>
+
+	<delete id="deleteUser" parameterType="String">
+		DELETE FROM users WHERE
+		user_id = #{userId}
+	</delete>
+
+	<select id="getUserDetail" parameterType="String"
+		resultType="UserVO">
+		SELECT user_id, name, email, phone, role, status,
+		created_at
+		FROM users
+		WHERE user_id = #{userId}
+	</select>
+
+	<update id="updateMyInfo" parameterType="UserVO">
+		UPDATE users
+		SET email =
+		#{email},
+		phone = #{phone}
+		WHERE user_id = #{userId}
+	</update>
+
+	<update id="updatePassword" parameterType="UserVO">
+		UPDATE users
+		SET
+		password = #{password}
+		WHERE user_id = #{userId}
+	</update>
+	<!-- 프로필 수정 -->
+	<update id="updateProfile" parameterType="UserVO">
+		UPDATE users
+		SET name = #{name},
+		email = #{email},
+		phone = #{phone},
+		role = #{role}
+		WHERE user_id = #{userId}
+	</update>
+
+	<!-- 이메일 중복 확인 (본인 제외) -->
+	<select id="emailCheck" parameterType="UserVO" resultType="int">
+		SELECT COUNT(*) FROM users
+		WHERE email = #{email} AND user_id !=
+		#{userId}
+	</select>
+
+	<!-- 연락처 중복 확인 (본인 제외) -->
+	<select id="phoneCheck" parameterType="UserVO" resultType="int">
+		SELECT COUNT(*) FROM users
+		WHERE phone = #{phone} AND user_id !=
+		#{userId}
+	</select>
+	<select id="countByEmail" resultType="int">
+		SELECT COUNT(*) FROM users
+		WHERE email = #{email} AND email IS NOT NULL AND email != ''
+	</select>
+
+	<select id="countByPhone" resultType="int">
+		SELECT COUNT(*) FROM users
+		WHERE phone = #{phone} AND phone IS NOT NULL AND phone != ''
+	</select>
+</mapper>

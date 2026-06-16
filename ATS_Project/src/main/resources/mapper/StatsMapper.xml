@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ats.project.dao.StatsDAO">
+
+	<!-- 단계별 지원자 수 통계 -->
+	<select id="getStageStats" resultType="map">
+
+		SELECT
+		stage,
+		COUNT(*) AS
+		cnt
+
+		FROM application
+
+		-- stage 기준 그룹화
+		GROUP BY stage
+
+		-- 단계 순서 고정 정렬
+		ORDER BY
+		CASE stage
+		WHEN 'RECEIVED' THEN 1
+		WHEN 'DOC_PASS' THEN 2
+		WHEN
+		'INTERVIEW1' THEN 3
+		WHEN 'INTERVIEW2' THEN 4
+		WHEN 'PASSED' THEN 5
+		WHEN
+		'REJECTED' THEN 6
+		ELSE 99
+		END
+
+	</select>
+
+	<!-- 공고별 지원자 수 통계 -->
+	<select id="getPostingStats" resultType="map">
+
+		SELECT
+		jp.title,
+		COUNT(a.application_id) AS cnt
+
+		FROM job_posting jp
+
+		-- 지원서 테이블과 연결
+		LEFT
+		JOIN application a
+		ON jp.posting_id = a.posting_id
+
+		-- 공고별 그룹화
+		GROUP BY
+		jp.posting_id, jp.title
+
+		-- 지원자 수 많은 순 정렬
+		ORDER BY cnt DESC
+
+	</select>
+	<!-- 월별 지원자 수 통계 -->
+
+	<select id="getMonthlyStats" resultType="map">
+		SELECT
+		DATE_FORMAT(applied_at, '%Y-%m') AS month,
+		COUNT(*) AS cnt
+		FROM
+		application
+		GROUP BY DATE_FORMAT(applied_at, '%Y-%m')
+		ORDER BY month
+	</select>
+	<!-- 최종 합격률 통계 -->
+	<select id="getPassRate" resultType="map">
+
+		SELECT
+
+		COUNT(*) AS
+		total_count,
+		-- 전체 지원자 수
+
+		SUM(
+		CASE
+		WHEN stage = 'PASSED' THEN 1
+		ELSE 0
+		END
+		)
+		AS pass_count,
+		-- 최종 합격자 수
+
+		CASE
+		WHEN COUNT(*) = 0 THEN 0
+
+		ELSE ROUND(
+		SUM(
+		CASE
+		WHEN stage = 'PASSED' THEN 1
+		ELSE 0
+		END
+		) / COUNT(*) * 100,
+		1
+		)
+		END AS
+		pass_rate
+		-- 합격률 계산 (%)
+
+		FROM application
+
+	</select>
+	<!-- 면접관별 평가 통계 -->
+	<select id="getInterviewerStats" resultType="map">
+		SELECT u.name AS
+		interviewer_name,
+		COUNT(e.eval_id) AS eval_count,
+		ROUND(AVG(e.tech_score + e.comm_score + e.solve_score), 1) AS
+		avg_score,
+		SUM(CASE WHEN e.recommend = 'PASS' THEN 1 ELSE 0 END) AS
+		pass_count,
+		SUM(CASE WHEN e.recommend = 'FAIL' THEN 1 ELSE 0 END) AS
+		fail_count
+		FROM interview_eval e
+		JOIN users u ON e.interviewer_id =
+		u.user_id
+		GROUP BY e.interviewer_id, u.name
+		ORDER BY eval_count DESC
+	</select>
+
+	<!-- 채용 소요 시간 (지원 → 최종확정) -->
+	<select id="getTimeToHire" resultType="map">
+		SELECT
+		ROUND(AVG(DATEDIFF(decided_at, applied_at)), 1) AS avg_days,
+		MIN(DATEDIFF(decided_at, applied_at)) AS min_days,
+		MAX(DATEDIFF(decided_at, applied_at)) AS max_days,
+		COUNT(*) AS
+		total_decided
+		FROM application
+		WHERE stage IN ('PASSED', 'REJECTED')
+		AND
+		decided_at IS NOT NULL
+		AND applied_at IS NOT NULL
+	</select>
+
+	<!-- 공고별 합격/불합격 누적 (스택 바용) -->
+	<select id="getPostingPassFailStats" resultType="map">
+		SELECT p.title,
+		SUM(CASE WHEN a.stage = 'PASSED' THEN 1 ELSE 0 END) AS passed,
+		SUM(CASE WHEN a.stage = 'REJECTED' THEN 1 ELSE 0 END) AS rejected,
+		COUNT(*) AS total
+		FROM application a
+		JOIN job_posting p ON a.posting_id
+		= p.posting_id
+		GROUP BY a.posting_id, p.title
+		ORDER BY total DESC
+	</select>
+	<!-- 단계별 이탈률 퍼널 -->
+	<select id="getFunnelStats" resultType="map">
+		SELECT
+		SUM(CASE WHEN stage IN
+		('RECEIVED','DOC_PASS','INTERVIEW1','INTERVIEW2','PASSED','REJECTED')
+		THEN 1 ELSE 0 END) AS received,
+		SUM(CASE WHEN stage IN
+		('DOC_PASS','INTERVIEW1','INTERVIEW2','PASSED','REJECTED')
+		THEN 1 ELSE 0 END) AS doc_pass,
+		SUM(CASE WHEN stage IN ('INTERVIEW1','INTERVIEW2','PASSED','REJECTED')
+		THEN 1 ELSE 0 END) AS interview,
+		SUM(CASE WHEN stage = 'PASSED' THEN 1 ELSE 0 END) AS final_pass
+		FROM application
+	</select>
+
+	<!-- 불합격 사유 TOP 5 -->
+	<select id="getRejectReasonTop5" resultType="map">
+		SELECT
+		reject_reason, COUNT(*) AS cnt
+		FROM application
+		WHERE stage = 'REJECTED'
+		AND reject_reason IS NOT NULL
+		AND reject_reason != ''
+		GROUP BY
+		reject_reason
+		ORDER BY cnt DESC
+		LIMIT 5
+	</select>
+</mapper>
+

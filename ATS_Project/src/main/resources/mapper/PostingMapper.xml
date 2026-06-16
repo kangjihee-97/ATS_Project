@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ats.project.dao.PostingDAO">
+
+    <select id="getPostingList" resultType="PostingVO">
+        SELECT p.posting_id, p.title, p.department, p.headcount,
+               p.deadline, p.status, p.created_at,
+               u.name AS created_by_name,
+               (SELECT COUNT(*) FROM application a WHERE a.posting_id = p.posting_id) AS applicant_count
+        FROM   job_posting p
+        LEFT   JOIN users u ON p.created_by = u.user_id
+        ORDER  BY p.created_at DESC
+    </select>
+
+    <select id="getPosting" parameterType="int" resultType="PostingVO">
+        SELECT p.*, u.name AS created_by_name,
+               (SELECT COUNT(*) FROM application a WHERE a.posting_id = p.posting_id) AS applicant_count
+        FROM   job_posting p
+        LEFT   JOIN users u ON p.created_by = u.user_id
+        WHERE  p.posting_id = #{postingId}
+    </select>
+
+    <insert id="insertPosting" parameterType="PostingVO"
+            useGeneratedKeys="true" keyProperty="postingId">
+        INSERT INTO job_posting
+               (title, department, headcount, requirements, preferred,
+                deadline, status, created_by, created_at)
+        VALUES (#{title}, #{department}, #{headcount}, #{requirements}, #{preferred},
+                #{deadline}, 'OPEN', #{createdBy}, NOW())
+    </insert>
+
+    <update id="updatePosting" parameterType="PostingVO">
+        UPDATE job_posting
+        SET title=#{title}, department=#{department}, headcount=#{headcount},
+            requirements=#{requirements}, preferred=#{preferred}, deadline=#{deadline}
+        WHERE posting_id=#{postingId}
+    </update>
+
+    <update id="closePosting" parameterType="int">
+        UPDATE job_posting SET status='CLOSED' WHERE posting_id=#{postingId}
+    </update>
+
+    <!-- 공고 삭제 전: 면접 평가서 삭제 -->
+    <delete id="deleteEvalsByPosting" parameterType="int">
+        DELETE FROM interview_eval
+        WHERE application_id IN
+              (SELECT application_id FROM application WHERE posting_id = #{postingId})
+    </delete>
+
+    <!-- 공고 삭제 전: 면접 일정 삭제 -->
+    <delete id="deleteSchedulesByPosting" parameterType="int">
+        DELETE FROM interview_schedule
+        WHERE application_id IN
+              (SELECT application_id FROM application WHERE posting_id = #{postingId})
+    </delete>
+
+    <!-- 공고 삭제 전: 단계 이력 삭제 -->
+    <delete id="deleteStageHistoryByPosting" parameterType="int">
+        DELETE FROM stage_history
+        WHERE application_id IN
+              (SELECT application_id FROM application WHERE posting_id = #{postingId})
+    </delete>
+
+    <!-- 공고 삭제 전: 지원서 삭제 -->
+    <delete id="deleteApplicationsByPosting" parameterType="int">
+        DELETE FROM application WHERE posting_id = #{postingId}
+    </delete>
+
+    <!-- 공고 최종 삭제 -->
+    <delete id="deletePosting" parameterType="int">
+        DELETE FROM job_posting WHERE posting_id = #{postingId}
+    </delete>
+
+    <update id="autoCloseExpired">
+        UPDATE job_posting SET status='CLOSED'
+        WHERE deadline &lt; CURDATE() AND status='OPEN'
+    </update>
+
+</mapper>
