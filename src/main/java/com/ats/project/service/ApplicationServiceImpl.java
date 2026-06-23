@@ -6,6 +6,7 @@ import java.util.List;
 import com.ats.project.dao.ApplicationDAO;
 import com.ats.project.model.ApplicationVO;
 import com.ats.project.model.PostingVO;
+import java.util.Map;
 
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
@@ -57,4 +58,18 @@ public class ApplicationServiceImpl implements ApplicationService {
 		applicationDAO.resetStage(applicationId);
 	}
 
+	@Override
+	public List<ApplicationVO> getHistoryList(Map<String, Object> params) {
+		return applicationDAO.getHistoryList(params);
+	}
+
+	@Override
+	public int getHistoryCount(Map<String, Object> params) {
+		return applicationDAO.getHistoryCount(params);
+	}
+
+	@Override
+	public Map<String, Object> getHistorySummary() {
+		return applicationDAO.getHistorySummary();
+	}
 }
