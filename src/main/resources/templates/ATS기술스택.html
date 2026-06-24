@@ -1,0 +1,188 @@
+<h2 class="sr-only">채용 지원자 관리 시스템(ATS) 기술 스택 — 레이어별 사용 기술 목록</h2>
+<style>
+.stack-wrap { padding: 1.5rem 0; }
+.layer-row { display: grid; grid-template-columns: 100px 1fr; gap: 12px; align-items: start; margin-bottom: 10px; }
+.layer-label { display: flex; flex-direction: column; align-items: flex-end; padding-top: 12px; gap: 3px; }
+.layer-name { font-size: 11px; font-weight: 500; text-align: right; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: var(--border-radius-lg); border: 0.5px solid; font-size: 13px; font-weight: 500; cursor: default; transition: transform .15s; }
+.chip:hover { transform: translateY(-2px); }
+.chip-icon { font-size: 16px; line-height: 1; }
+.chip-text { display: flex; flex-direction: column; }
+.chip-main { font-size: 12px; font-weight: 500; line-height: 1.2; }
+.chip-sub  { font-size: 10px; font-weight: 400; opacity: .75; line-height: 1.2; }
+.divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 14px 0; }
+.front   { background: var(--color-background-info); border-color: var(--color-border-info); color: var(--color-text-info); }
+.back    { background: #ECFDF5; border-color: #A7F3D0; color: #065F46; }
+.db      { background: #EEEDFE; border-color: #AFA9EC; color: #3C3489; }
+.lib     { background: #FFF7ED; border-color: #FDE68A; color: #92400E; }
+.tool    { background: var(--color-background-secondary); border-color: var(--color-border-secondary); color: var(--color-text-secondary); }
+@media (prefers-color-scheme: dark) {
+  .back { background: #064E3B; border-color: #065F46; color: #6EE7B7; }
+  .db   { background: #26215C; border-color: #534AB7; color: #AFA9EC; }
+  .lib  { background: #412402; border-color: #854F0B; color: #FCD34D; }
+}
+.section-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 0.5px; background: var(--color-border-tertiary); }
+.flow-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 16px 0 8px; }
+.flow-node { padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500; border: 0.5px solid; }
+.flow-arrow { color: var(--color-text-tertiary); font-size: 14px; }
+</style>
+
+<div class="stack-wrap">
+  <div class="section-title">레이어별 기술 스택</div>
+
+  <!-- 사용자 -->
+  <div class="layer-row">
+    <div class="layer-label"><span class="layer-name" style="color:var(--color-text-tertiary)">사용자</span></div>
+    <div class="chips">
+      <div class="chip tool">
+        <span class="chip-icon">🌐</span>
+        <span class="chip-text"><span class="chip-main">Web Browser</span><span class="chip-sub">Chrome / Edge</span></span>
+      </div>
+    </div>
+  </div>
+  <hr class="divider">
+
+  <!-- 프론트엔드 -->
+  <div class="layer-row">
+    <div class="layer-label"><span class="layer-name" style="color:var(--color-text-info)">Front-End</span></div>
+    <div class="chips">
+      <div class="chip front">
+        <span class="chip-icon">🏗️</span>
+        <span class="chip-text"><span class="chip-main">HTML5</span><span class="chip-sub">시맨틱 마크업</span></span>
+      </div>
+      <div class="chip front">
+        <span class="chip-icon">🎨</span>
+        <span class="chip-text"><span class="chip-main">CSS3</span><span class="chip-sub">스타일·레이아웃</span></span>
+      </div>
+      <div class="chip front">
+        <span class="chip-icon">⚡</span>
+        <span class="chip-text"><span class="chip-main">JavaScript</span><span class="chip-sub">DOM 조작·이벤트</span></span>
+      </div>
+      <div class="chip front">
+        <span class="chip-icon">💎</span>
+        <span class="chip-text"><span class="chip-main">jQuery</span><span class="chip-sub">DOM·이벤트 처리</span></span>
+      </div>
+      <div class="chip front">
+        <span class="chip-icon">🔄</span>
+        <span class="chip-text"><span class="chip-main">Ajax</span><span class="chip-sub">비동기 서버 통신</span></span>
+      </div>
+      <div class="chip front">
+        <span class="chip-icon">📊</span>
+        <span class="chip-text"><span class="chip-main">Chart.js</span><span class="chip-sub">통계 차트 시각화</span></span>
+      </div>
+      <div class="chip front">
+        <span class="chip-icon">📄</span>
+        <span class="chip-text"><span class="chip-main">JSP</span><span class="chip-sub">서버사이드 뷰 템플릿</span></span>
+      </div>
+    </div>
+  </div>
+  <hr class="divider">
+
+  <!-- 백엔드 -->
+  <div class="layer-row">
+    <div class="layer-label"><span class="layer-name" style="color:#065F46">Back-End</span></div>
+    <div class="chips">
+      <div class="chip back">
+        <span class="chip-icon">☕</span>
+        <span class="chip-text"><span class="chip-main">Java</span><span class="chip-sub">메인 개발 언어</span></span>
+      </div>
+      <div class="chip back">
+        <span class="chip-icon">🍃</span>
+        <span class="chip-text"><span class="chip-main">Spring MVC</span><span class="chip-sub">웹 애플리케이션 프레임워크</span></span>
+      </div>
+      <div class="chip back">
+        <span class="chip-icon">🌐</span>
+        <span class="chip-text"><span class="chip-main">JSP &amp; Servlet</span><span class="chip-sub">HTTP 요청·응답 처리</span></span>
+      </div>
+      <div class="chip back">
+        <span class="chip-icon">🔗</span>
+        <span class="chip-text"><span class="chip-main">MyBatis</span><span class="chip-sub">SQL 매핑 ORM</span></span>
+      </div>
+      <div class="chip back">
+        <span class="chip-icon">🛡️</span>
+        <span class="chip-text"><span class="chip-main">Spring Interceptor</span><span class="chip-sub">권한 접근 제어(RBAC)</span></span>
+      </div>
+      <div class="chip back">
+        <span class="chip-icon">🐱</span>
+        <span class="chip-text"><span class="chip-main">Apache Tomcat</span><span class="chip-sub">WAS 서버</span></span>
+      </div>
+    </div>
+  </div>
+  <hr class="divider">
+
+  <!-- 데이터베이스 -->
+  <div class="layer-row">
+    <div class="layer-label"><span class="layer-name" style="color:#3C3489">Database</span></div>
+    <div class="chips">
+      <div class="chip db">
+        <span class="chip-icon">🏛️</span>
+        <span class="chip-text"><span class="chip-main">Oracle</span><span class="chip-sub">메인 운영 DB</span></span>
+      </div>
+      <div class="chip db">
+        <span class="chip-icon">🛠️</span>
+        <span class="chip-text"><span class="chip-main">SQL Developer</span><span class="chip-sub">DB 관리 툴</span></span>
+      </div>
+    </div>
+  </div>
+  <hr class="divider">
+
+  <!-- 라이브러리 -->
+  <div class="layer-row">
+    <div class="layer-label"><span class="layer-name" style="color:#92400E">Library</span></div>
+    <div class="chips">
+      <div class="chip lib">
+        <span class="chip-icon">📧</span>
+        <span class="chip-text"><span class="chip-main">Java Mail API</span><span class="chip-sub">자동 이메일 발송</span></span>
+      </div>
+      <div class="chip lib">
+        <span class="chip-icon">📋</span>
+        <span class="chip-text"><span class="chip-main">Apache POI</span><span class="chip-sub">엑셀 리포트 출력</span></span>
+      </div>
+      <div class="chip lib">
+        <span class="chip-icon">🔀</span>
+        <span class="chip-text"><span class="chip-main">jQuery UI</span><span class="chip-sub">드래그앤드롭·정렬</span></span>
+      </div>
+    </div>
+  </div>
+  <hr class="divider">
+
+  <!-- 개발 도구 -->
+  <div class="layer-row">
+    <div class="layer-label"><span class="layer-name" style="color:var(--color-text-secondary)">도구·협업</span></div>
+    <div class="chips">
+      <div class="chip tool">
+        <span class="chip-icon">🌑</span>
+        <span class="chip-text"><span class="chip-main">Eclipse IDE</span><span class="chip-sub">백엔드 개발 환경</span></span>
+      </div>
+      <div class="chip tool">
+        <span class="chip-icon">📝</span>
+        <span class="chip-text"><span class="chip-main">Visual Studio Code</span><span class="chip-sub">프론트엔드 편집</span></span>
+      </div>
+      <div class="chip tool">
+        <span class="chip-icon">🐙</span>
+        <span class="chip-text"><span class="chip-main">GitHub</span><span class="chip-sub">버전 관리·협업</span></span>
+      </div>
+      <div class="chip tool">
+        <span class="chip-icon">🪟</span>
+        <span class="chip-text"><span class="chip-main">Windows 10</span><span class="chip-sub">개발 운영 환경</span></span>
+      </div>
+    </div>
+  </div>
+  <hr class="divider">
+
+  <!-- 요청 흐름 -->
+  <div class="section-title">요청 흐름</div>
+  <div class="flow-row">
+    <div class="flow-node front">브라우저</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node front">JSP / HTML</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node back">Spring MVC Controller</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node back">Service / MyBatis</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node db">Oracle DB</div>
+  </div>
+</div>
