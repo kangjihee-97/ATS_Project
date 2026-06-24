@@ -31,7 +31,6 @@ public class PipelineController {
 		if (session.getAttribute("loginUser") == null)
 			return "redirect:/user/login";
 		model.addAttribute("list", applicationService.getPipelineList());
-		model.addAttribute("historyList", applicationService.getHistoryList());
 		return "pipeline/list";
 	}
 
