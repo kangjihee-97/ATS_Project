@@ -597,6 +597,37 @@ opacity
 	height: 10px;
 	border-radius: 3px
 }
+
+/* PDF 버튼 */
+.btn-pdf {
+	background: #3d1c02;
+	color: #fff;
+	border: none;
+	padding: 8px 18px;
+	border-radius: 10px;
+	font-size: 12.5px;
+	font-family: 'Noto Sans KR', sans-serif;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all .2s;
+}
+.btn-pdf:hover {
+	background: #5c2a0e;
+}
+
+/* 프린트/PDF 스타일 */
+@media print {
+	.sidebar { display: none !important; }
+	.main { margin-left: 0 !important; padding: 20px !important; }
+	.btn-pdf { display: none !important; }
+	.btn-ai-refresh { display: none !important; }
+	body { background: #fff !important; }
+	.kpi-card, .card { break-inside: avoid; border: 1px solid #ddd !important; }
+	.kpi-grid { grid-template-columns: repeat(4, 1fr) !important; }
+	.mid-grid, .bot-grid { grid-template-columns: 1fr 1fr !important; }
+	.top-date { border: 1px solid #ddd !important; }
+	* { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+}
 </style>
 </head>
 <body>
@@ -678,7 +709,10 @@ opacity
 				<h1>통계 리포트 📊</h1>
 				<p>지원자 현황과 채용 성과를 한눈에 확인합니다.</p>
 			</div>
-			<div class="top-date"><%=dateStr%></div>
+			<div style="display:flex; gap:10px; align-items:center;">
+				<div class="top-date"><%=dateStr%></div>
+				<button class="btn-pdf" onclick="window.print()">📄 PDF 저장</button>
+			</div>
 		</div>
 
 		<!-- KPI -->
