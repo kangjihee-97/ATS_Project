@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ats.project.dao.EvalDAO">
+
+    <!-- 전체 평가서 목록 (인사담당자용) -->
+    <select id="getEvalList" resultType="EvalVO">
+        SELECT e.eval_id, e.application_id, e.interviewer_id,
+               e.tech_score, e.comm_score, e.solve_score,
+               ROUND((e.tech_score + e.comm_score + e.solve_score) / 3.0, 1)
+                   AS avg_score,
+               e.recommend, e.eval_date,
+               a.applicant_name,
+               j.title AS posting_title,
+               u.name  AS interviewer_name
+        FROM   interview_eval e
+        JOIN   application a ON e.application_id = a.application_id
+        JOIN   job_posting  j ON a.posting_id     = j.posting_id
+        JOIN   users        u ON e.interviewer_id = u.user_id
+        ORDER  BY e.eval_date DESC
+    </select>
+
+    <!-- 면접관별 평가서 목록 -->
+    <select id="getEvalListByInterviewer" parameterType="String"
+            resultType="EvalVO">
+        SELECT e.eval_id, e.application_id, e.interviewer_id,
+               e.tech_score, e.comm_score, e.solve_score,
+               ROUND((e.tech_score + e.comm_score + e.solve_score) / 3.0, 1)
+                   AS avg_score,
+               e.recommend, e.eval_date,
+               a.applicant_name,
+               j.title AS posting_title,
+               u.name  AS interviewer_name
+        FROM   interview_eval e
+        JOIN   application a ON e.application_id = a.application_id
+        JOIN   job_posting  j ON a.posting_id     = j.posting_id
+        JOIN   users        u ON e.interviewer_id = u.user_id
+        WHERE  e.interviewer_id = #{interviewerId}
+        ORDER  BY e.eval_date DESC
+    </select>
+
+    <!-- 평가서 상세 -->
+    <select id="getEval" parameterType="int" resultType="EvalVO">
+        SELECT e.*, a.applicant_name, j.title AS posting_title,
+               u.name AS interviewer_name,
+               ROUND((e.tech_score + e.comm_score + e.solve_score) / 3.0, 1)
+                   AS avg_score
+        FROM   interview_eval e
+        JOIN   application a ON e.application_id = a.application_id
+        JOIN   job_posting  j ON a.posting_id     = j.posting_id
+        JOIN   users        u ON e.interviewer_id = u.user_id
+        WHERE  e.eval_id = #{evalId}
+    </select>
+
+    <!-- 지원자별 평가서 전체 (집계용) -->
+    <select id="getEvalsByApplication" parameterType="int"
+            resultType="EvalVO">
+        SELECT e.eval_id, e.tech_score, e.comm_score, e.solve_score,
+               ROUND((e.tech_score + e.comm_score + e.solve_score) / 3.0, 1)
+                   AS avg_score,
+               e.recommend, e.comment, e.eval_date,
+               u.name AS interviewer_name
+        FROM   interview_eval e
+        JOIN   users u ON e.interviewer_id = u.user_id
+        WHERE  e.application_id = #{applicationId}
+        ORDER  BY e.eval_date ASC
+    </select>
+
+    <!-- 평가서 등록 -->
+    <insert id="insertEval" parameterType="EvalVO"
+            useGeneratedKeys="true" keyProperty="evalId">
+        INSERT INTO interview_eval
+               (application_id, interviewer_id, tech_score,
+                comm_score, solve_score, comment, recommend, eval_date)
+        VALUES (#{applicationId}, #{interviewerId}, #{techScore},
+                #{commScore}, #{solveScore}, #{comment}, #{recommend}, NOW())
+    </insert>
+
+    <!-- 평가서 수정 -->
+    <update id="updateEval" parameterType="EvalVO">
+        UPDATE interview_eval
+        SET    tech_score  = #{techScore},
+               comm_score  = #{commScore},
+               solve_score = #{solveScore},
+               comment     = #{comment},
+               recommend   = #{recommend}
+        WHERE  eval_id     = #{evalId}
+    </update>
+
+    <!-- 중복 평가 확인 (같은 면접관이 같은 지원자 중복 방지) -->
+    <select id="checkDuplicate" parameterType="EvalVO" resultType="int">
+        SELECT COUNT(*) FROM interview_eval
+        WHERE  application_id = #{applicationId}
+          AND  interviewer_id = #{interviewerId}
+          AND  eval_id       != #{evalId}
+    </select>
+
+    <!-- 지원자 목록 (드롭다운용) -->
+    <select id="getApplicationList" resultType="ApplicationVO">
+        SELECT a.application_id, a.applicant_name,
+               j.title AS posting_title
+        FROM   application a
+        JOIN   job_posting j ON a.posting_id = j.posting_id
+        WHERE  a.stage IN ('INTERVIEW1','INTERVIEW2')
+        ORDER  BY a.applied_at DESC
+    </select>
+
+</mapper>

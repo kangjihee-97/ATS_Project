@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ats.project.dao.ApplicationDAO">
+
+	<select id="getApplicationList" resultType="ApplicationVO">
+		SELECT
+		a.application_id, a.applicant_name, a.email,
+		a.phone, a.career_year,
+		a.stage, a.applied_at,
+		j.title AS posting_title, j.posting_id
+		FROM
+		application a
+		JOIN job_posting j ON a.posting_id = j.posting_id
+		ORDER BY
+		a.applied_at DESC
+	</select>
+	<!-- 히스토리 목록 (검색 + 페이징) -->
+	<select id="getHistoryList" parameterType="map"
+		resultType="ApplicationVO">
+		SELECT a.application_id, a.applicant_name, a.email,
+		a.career_year,
+		a.stage, a.reject_reason, a.decided_at, a.applied_at,
+		p.title AS
+		posting_title,
+		(SELECT sh.before_stage
+		FROM stage_history sh
+		WHERE
+		sh.application_id = a.application_id
+		AND sh.after_stage = 'REJECTED'
+		ORDER BY sh.changed_at DESC
+		LIMIT 1) AS fail_stage,
+		(SELECT COUNT(*)
+		FROM application a2
+		WHERE a2.email = a.email
+		AND a2.applicant_name =
+		a.applicant_name) AS apply_count
+		FROM application a
+		LEFT JOIN
+		job_posting p ON a.posting_id = p.posting_id
+		WHERE a.stage IN
+		('PASSED', 'REJECTED')
+		<if test="stage != null and stage != 'ALL'">
+			AND a.stage = #{stage}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND (a.applicant_name LIKE CONCAT('%', #{keyword}, '%')
+			OR
+			p.title LIKE CONCAT('%', #{keyword}, '%')
+			OR a.email LIKE CONCAT('%',
+			#{keyword}, '%'))
+		</if>
+		ORDER BY a.decided_at DESC
+		LIMIT #{pageSize} OFFSET #{offset}
+	</select>
+
+	<!-- 전체 건수 (페이징용) -->
+	<select id="getHistoryCount" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*)
+		FROM application a
+		LEFT JOIN job_posting p ON
+		a.posting_id = p.posting_id
+		WHERE a.stage IN ('PASSED', 'REJECTED')
+		<if test="stage != null and stage != 'ALL'">
+			AND a.stage = #{stage}
+		</if>
+		<if test="keyword != null and keyword != ''">
+			AND (a.applicant_name LIKE CONCAT('%', #{keyword}, '%')
+			OR
+			p.title LIKE CONCAT('%', #{keyword}, '%')
+			OR a.email LIKE CONCAT('%',
+			#{keyword}, '%'))
+		</if>
+	</select>
+
+	<!-- 합격/불합격 건수 (요약 카드용) -->
+	<select id="getHistorySummary" resultType="map">
+		SELECT
+		COUNT(*) AS
+		total,
+		SUM(CASE WHEN stage = 'PASSED' THEN 1 ELSE 0 END) AS passed,
+		SUM(CASE WHEN stage = 'REJECTED' THEN 1 ELSE 0 END) AS rejected
+		FROM
+		application
+		WHERE stage IN ('PASSED', 'REJECTED')
+	</select>
+	<select id="getApplication" parameterType="int"
+		resultType="ApplicationVO">
+		SELECT a.*, j.title AS posting_title
+		FROM application a
+		JOIN
+		job_posting j ON a.posting_id = j.posting_id
+		WHERE a.application_id =
+		#{applicationId}
+	</select>
+
+	<select id="getPipelineList" resultType="ApplicationVO">
+		SELECT a.application_id,
+		a.applicant_name,
+		a.career_year, a.stage, a.posting_id
+		FROM application
+		a
+		WHERE a.stage NOT IN ('REJECTED')
+		ORDER BY a.applied_at ASC
+	</select>
+
+	<insert id="insertApplication" parameterType="ApplicationVO"
+		useGeneratedKeys="true" keyProperty="applicationId">
+		INSERT INTO application
+		(posting_id, applicant_name, email, phone,
+		career_year, cover_letter,
+		stage,
+		resume_path, resume_original_name, applied_at)
+		VALUES
+		(#{postingId}, #{applicantName}, #{email}, #{phone},
+		#{careerYear},
+		#{coverLetter}, 'RECEIVED',
+		#{resumePath}, #{resumeOriginalName},
+		NOW())
+	</insert>
+
+	<update id="updateStage"
+		parameterType="com.ats.project.model.ApplicationVO">
+		UPDATE application
+		SET stage = #{stage},
+		decided_at = CASE
+		WHEN #{stage} IN ('PASSED','REJECTED') THEN NOW() ELSE NULL
+		END,
+		reject_reason = CASE WHEN #{stage} = 'REJECTED' THEN
+		#{rejectReason}
+		ELSE NULL END
+		WHERE application_id = #{applicationId}
+	</update>
+
+	<select id="getOpenPostingList" resultType="PostingVO">
+		SELECT posting_id,
+		title, department
+		FROM job_posting
+		WHERE status = 'OPEN'
+		ORDER BY
+		created_at DESC
+	</select>
+
+	<insert id="insertStageHistory" parameterType="StageHistoryVO">
+		INSERT INTO
+		stage_history
+		(application_id, before_stage, after_stage, changed_by,
+		note, changed_at)
+		VALUES (#{applicationId}, #{beforeStage},
+		#{afterStage},
+		#{changedBy}, #{note}, NOW())
+	</insert>
+	<!-- 파이프라인 히스토리 (합격/불합격) -->
+
+	<update id="resetStage" parameterType="int">
+		UPDATE application
+		SET
+		stage = 'RECEIVED', decided_at = NULL, reject_reason = NULL
+		WHERE
+		application_id = #{id}
+	</update>
+
+</mapper>
