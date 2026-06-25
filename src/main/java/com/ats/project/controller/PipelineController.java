@@ -31,12 +31,35 @@ public class PipelineController {
 		return "pipeline/list";
 	}
 
-	/* 파이프라인 히스토리 페이지 */
 	@GetMapping("/history")
-	public String history(Model model, HttpSession session) {
+	public String history(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "ALL") String filter,
+			Model model, HttpSession session) {
+
 		if (session.getAttribute("loginUser") == null)
 			return "redirect:/user/login";
-		model.addAttribute("historyList", applicationService.getHistoryList());
+
+		int size = 10;
+		int offset = (page - 1) * size;
+
+		String filterParam = "ALL".equals(filter) ? null : filter;
+
+		List<com.ats.project.model.ApplicationVO> list = applicationService.getHistoryListPaged(offset, size,
+				filterParam);
+		int totalCount = applicationService.getHistoryCount(filterParam);
+		int totalPages = (int) Math.ceil((double) totalCount / size);
+
+		model.addAttribute("historyList", list);
+		model.addAttribute("currentPage", page);
+		model.addAttribute("totalPages", totalPages);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("currentFilter", filter);
+
+		// 전체 합격/불합격 카운트 (필터 무관)
+		int passedCount = applicationService.getHistoryCount("PASSED");
+		int rejectedCount = applicationService.getHistoryCount("REJECTED");
+		model.addAttribute("passedCount", passedCount);
+		model.addAttribute("rejectedCount", rejectedCount);
+
 		return "pipeline/history";
 	}
 

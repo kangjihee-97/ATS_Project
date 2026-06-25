@@ -5,19 +5,17 @@ import com.ats.project.model.ApplicationVO;
 import com.ats.project.model.PostingVO;
 
 public interface ApplicationService {
-	List<ApplicationVO> getApplicationList();
+    List<ApplicationVO> getApplicationList();
+    ApplicationVO getApplication(int applicationId);
+    List<ApplicationVO> getPipelineList();
+    int insertApplication(ApplicationVO vo);
+    int updateStage(int applicationId, String stage, String rejectReason);
+    List<PostingVO> getOpenPostingList();
+    List<ApplicationVO> getHistoryList();
 
-	ApplicationVO getApplication(int applicationId);
+    // ✅ 서버사이드 페이징용 추가
+    List<ApplicationVO> getHistoryListPaged(int offset, int size, String filter);
+    int getHistoryCount(String filter);
 
-	List<ApplicationVO> getPipelineList();
-
-	int insertApplication(ApplicationVO vo);
-
-	int updateStage(int applicationId, String stage, String rejectReason);
-
-	List<PostingVO> getOpenPostingList();
-
-	List<ApplicationVO> getHistoryList();
-
-	void resetStage(int id);
+    void resetStage(int id);
 }

@@ -53,6 +53,16 @@ public class ApplicationServiceImpl implements ApplicationService {
 	}
 
 	@Override
+	public List<ApplicationVO> getHistoryListPaged(int offset, int size, String filter) {
+		return applicationDAO.getHistoryListPaged(offset, size, filter);
+	}
+
+	@Override
+	public int getHistoryCount(String filter) {
+		return applicationDAO.getHistoryCount(filter);
+	}
+
+	@Override
 	public void resetStage(int applicationId) {
 		applicationDAO.resetStage(applicationId);
 	}

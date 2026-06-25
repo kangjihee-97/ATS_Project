@@ -25,4 +25,8 @@ public interface ApplicationDAO {
 	List<ApplicationVO> getHistoryList();
 
 	int resetStage(int applicationId);
+
+	int getHistoryCount(String filter);
+
+	List<ApplicationVO> getHistoryListPaged(int offset, int size, String filter);
 }
