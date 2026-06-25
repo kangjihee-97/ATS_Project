@@ -5,4 +5,6 @@ public interface MailService {
     void sendFailMail(String toEmail, String applicantName, String postingTitle);
     void sendInterviewMail(String toEmail, String applicantName,
                            String postingTitle, String scheduledAt, String location);
+    void sendVerificationCode(String toEmail, String code);
+    String generateCode();
 }
