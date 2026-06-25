@@ -575,7 +575,7 @@ body {
 				<div class="form-title">환영합니다! 👋</div>
 				<div class="form-sub">계정 정보를 입력하여 로그인하세요</div>
 				<div class="error-msg" id="loginError">${error}</div>
-				<form action="/user/login" method="post">
+				<form action="/user/login" method="post" id="loginForm2">
 					<div class="field">
 						<label>아이디</label>
 						<div class="input-wrap">
@@ -597,7 +597,7 @@ body {
 							name="remember" /> 로그인 상태 유지</label> <a href="#" class="find-pw"
 							onclick="openFindPw();return false;">비밀번호 찾기</a>
 					</div>
-					<button type="submit" class="btn-login">로그인</button>
+					<button type="button" class="btn-login" onclick="doLogin()">로그인</button>
 				</form>
 				<div class="copyright">© 2026 VERNALIS · Applicant Tracking
 					System</div>
@@ -795,7 +795,57 @@ body {
 		</div>
 	</div>
 
+	<!-- 메일 발송 로딩 오버레이 -->
+	<div id="loadingOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9999; align-items:center; justify-content:center;">
+		<div style="background:#fff; border-radius:20px; padding:36px 44px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.3); width:320px;">
+			<div style="font-size:40px; margin-bottom:16px;">📧</div>
+			<div style="font-size:16px; font-weight:700; color:#3d1c02; margin-bottom:8px;">인증 메일 발송 중...</div>
+			<div style="font-size:13px; color:#a07050; line-height:1.6;">등록된 이메일로 인증번호를 발송하고 있습니다.<br>잠시만 기다려 주세요.</div>
+			<div style="margin-top:20px; display:flex; justify-content:center; gap:6px;">
+				<div style="width:10px; height:10px; border-radius:50%; background:#8b4513; animation:bounce 1.2s infinite 0s;"></div>
+				<div style="width:10px; height:10px; border-radius:50%; background:#8b4513; animation:bounce 1.2s infinite .2s;"></div>
+				<div style="width:10px; height:10px; border-radius:50%; background:#8b4513; animation:bounce 1.2s infinite .4s;"></div>
+			</div>
+		</div>
+	</div>
+	<style>
+		@keyframes bounce {
+			0%, 100% { transform: translateY(0); opacity: .4; }
+			50% { transform: translateY(-8px); opacity: 1; }
+		}
+	</style>
+
 	<script>
+function showLoading() {
+  var overlay = document.getElementById('loadingOverlay');
+  overlay.style.display = 'flex';
+}
+
+function doLogin() {
+  var form = document.getElementById('loginForm2');
+  var userId = form.querySelector('[name=userId]').value.trim();
+  var password = form.querySelector('[name=password]').value.trim();
+  if (!userId || !password) {
+    alert('아이디와 비밀번호를 입력해주세요.');
+    return;
+  }
+  showLoading();
+  form.submit();
+}
+
+// 엔터키 로그인
+document.addEventListener('DOMContentLoaded', function() {
+  var form = document.getElementById('loginForm2');
+  if (form) {
+    form.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        doLogin();
+      }
+    });
+  }
+});
+
 /* ══════════════════════════════
    공통 유틸
 ══════════════════════════════ */

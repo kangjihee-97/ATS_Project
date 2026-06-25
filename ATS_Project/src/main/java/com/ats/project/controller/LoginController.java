@@ -85,6 +85,12 @@ public class LoginController {
 		Long expireTime = (Long) session.getAttribute("verifyExpire");
 		UserVO user = (UserVO) session.getAttribute("verifyUser");
 
+		System.out.println("=== 인증 시도 ===");
+		System.out.println("입력 코드: " + code);
+		System.out.println("저장 코드: " + savedCode);
+		System.out.println("저장 유저: " + user);
+		System.out.println("세션 ID: " + session.getId());
+
 		if (savedCode == null || user == null) {
 			model.addAttribute("msg", "세션이 만료됐습니다. 다시 로그인해 주세요.");
 			model.addAttribute("mode", "login");
@@ -102,7 +108,7 @@ public class LoginController {
 		}
 
 		// 코드 불일치
-		if (!savedCode.equals(code.trim())) {
+		if (!savedCode.equals(code.replaceAll("\\s", ""))) {
 			model.addAttribute("email", maskEmail(user.getEmail()));
 			model.addAttribute("msg", "인증번호가 올바르지 않습니다.");
 			return "user/verify";

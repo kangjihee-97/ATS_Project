@@ -1,6 +1,9 @@
 package com.ats.project.model;
 
-public class UserVO {
+import java.io.Serializable;
+
+public class UserVO implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String userId;
     private String password;
     private String name;
@@ -26,5 +29,4 @@ public class UserVO {
     public void setStatus(String status) { this.status = status; }
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
-
 }
