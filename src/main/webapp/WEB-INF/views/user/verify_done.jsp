@@ -73,7 +73,7 @@
 		<div class="popup">
 			<h3>✅ 인증이 완료됐습니다!</h3>
 			<p>
-				이 기기에서 <strong>3개월간 로그인정보를 저장</strong>하시겠습니까?<br> 다음 로그인부터 이메일 인증
+				이 기기에서 <strong>3개월간 로그인 정보를 저장</strong>하시겠습니까?<br> 다음 로그인부터 이메일 인증
 				없이 바로 접속됩니다.
 			</p>
 			<button class="btn-confirm" onclick="saveCookieAndGo()">3개월간
