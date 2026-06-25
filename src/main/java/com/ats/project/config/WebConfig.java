@@ -18,6 +18,8 @@ public class WebConfig implements WebMvcConfigurer {
 						"/user/phoneCheck", // 연락처 중복확인
 						"/user/verifyIdentity", // 비밀번호 찾기 본인확인
 						"/user/resetPasswordByEmail", // 비밀번호 재설정
+						"/user/verify", // 이메일 인증번호 확인
+						"/user/resendCode", // 인증번호 재발송
 						"/img/**", // 이미지 정적 리소스
 						"/css/**", // CSS
 						"/js/**", // JS

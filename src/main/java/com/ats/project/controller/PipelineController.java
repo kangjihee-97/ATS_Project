@@ -5,15 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import com.ats.project.model.ApplicationVO;
 import com.ats.project.service.ApplicationService;
 import com.ats.project.service.PipelineService;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 @Controller
 @RequestMapping("/pipeline")
@@ -31,39 +27,16 @@ public class PipelineController {
 		if (session.getAttribute("loginUser") == null)
 			return "redirect:/user/login";
 		model.addAttribute("list", applicationService.getPipelineList());
+		model.addAttribute("historyList", applicationService.getHistoryList());
 		return "pipeline/list";
 	}
 
+	/* 파이프라인 히스토리 페이지 */
 	@GetMapping("/history")
-	public String history(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "ALL") String stage,
-			@RequestParam(defaultValue = "") String keyword, Model model, HttpSession session) {
-
+	public String history(Model model, HttpSession session) {
 		if (session.getAttribute("loginUser") == null)
 			return "redirect:/user/login";
-
-		int pageSize = 10;
-		int offset = (page - 1) * pageSize;
-
-		Map<String, Object> params = new HashMap<>();
-		params.put("stage", stage);
-		params.put("keyword", keyword);
-		params.put("pageSize", pageSize);
-		params.put("offset", offset);
-
-		List<ApplicationVO> historyList = applicationService.getHistoryList(params);
-		int totalCount = applicationService.getHistoryCount(params);
-		Map<String, Object> summary = applicationService.getHistorySummary();
-
-		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
-
-		model.addAttribute("historyList", historyList);
-		model.addAttribute("currentPage", page);
-		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("totalCount", totalCount);
-		model.addAttribute("summary", summary);
-		model.addAttribute("stage", stage);
-		model.addAttribute("keyword", keyword);
-
+		model.addAttribute("historyList", applicationService.getHistoryList());
 		return "pipeline/history";
 	}
 

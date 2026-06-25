@@ -7,6 +7,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import jakarta.mail.internet.MimeMessage;
 
+import java.util.Random;
+
 @Service
 public class MailServiceImpl implements MailService {
 
@@ -102,5 +104,30 @@ public class MailServiceImpl implements MailService {
         } catch (Exception e) {
             System.err.println("메일 발송 실패: " + e.getMessage());
         }
+    }
+
+    /* 6자리 인증번호 생성 */
+    @Override
+    public String generateCode() {
+        Random random = new Random();
+        return String.valueOf(100000 + random.nextInt(900000));
+    }
+
+    /* 로그인 인증번호 발송 */
+    @Override
+    public void sendVerificationCode(String toEmail, String code) {
+        String subject = "[VERNALIS ATS] 로그인 인증번호";
+        String content =
+            "<div style='font-family:sans-serif;max-width:400px;margin:0 auto'>" +
+            "<div style='background:#3d1c02;padding:20px;text-align:center'>" +
+            "<h2 style='color:#fff;margin:0'>VERNALIS ATS</h2></div>" +
+            "<div style='padding:30px;background:#fff'>" +
+            "<p>아래 인증번호를 입력해 주세요. 인증번호는 <strong>3분간</strong> 유효합니다.</p>" +
+            "<div style='background:#f5ede3;padding:24px;text-align:center;border-radius:8px;margin:20px 0'>" +
+            "<h1 style='color:#3d1c02;letter-spacing:10px;margin:0;font-size:36px'>" + code + "</h1>" +
+            "</div>" +
+            "<p style='color:#888;font-size:12px'>본인이 요청하지 않은 경우 이 메일을 무시하세요.</p>" +
+            "</div></div>";
+        send(toEmail, subject, content);
     }
 }

@@ -16,76 +16,7 @@
 		ORDER BY
 		a.applied_at DESC
 	</select>
-	<!-- 히스토리 목록 (검색 + 페이징) -->
-	<select id="getHistoryList" parameterType="map"
-		resultType="ApplicationVO">
-		SELECT a.application_id, a.applicant_name, a.email,
-		a.career_year,
-		a.stage, a.reject_reason, a.decided_at, a.applied_at,
-		p.title AS
-		posting_title,
-		(SELECT sh.before_stage
-		FROM stage_history sh
-		WHERE
-		sh.application_id = a.application_id
-		AND sh.after_stage = 'REJECTED'
-		ORDER BY sh.changed_at DESC
-		LIMIT 1) AS fail_stage,
-		(SELECT COUNT(*)
-		FROM application a2
-		WHERE a2.email = a.email
-		AND a2.applicant_name =
-		a.applicant_name) AS apply_count
-		FROM application a
-		LEFT JOIN
-		job_posting p ON a.posting_id = p.posting_id
-		WHERE a.stage IN
-		('PASSED', 'REJECTED')
-		<if test="stage != null and stage != 'ALL'">
-			AND a.stage = #{stage}
-		</if>
-		<if test="keyword != null and keyword != ''">
-			AND (a.applicant_name LIKE CONCAT('%', #{keyword}, '%')
-			OR
-			p.title LIKE CONCAT('%', #{keyword}, '%')
-			OR a.email LIKE CONCAT('%',
-			#{keyword}, '%'))
-		</if>
-		ORDER BY a.decided_at DESC
-		LIMIT #{pageSize} OFFSET #{offset}
-	</select>
 
-	<!-- 전체 건수 (페이징용) -->
-	<select id="getHistoryCount" parameterType="map"
-		resultType="int">
-		SELECT COUNT(*)
-		FROM application a
-		LEFT JOIN job_posting p ON
-		a.posting_id = p.posting_id
-		WHERE a.stage IN ('PASSED', 'REJECTED')
-		<if test="stage != null and stage != 'ALL'">
-			AND a.stage = #{stage}
-		</if>
-		<if test="keyword != null and keyword != ''">
-			AND (a.applicant_name LIKE CONCAT('%', #{keyword}, '%')
-			OR
-			p.title LIKE CONCAT('%', #{keyword}, '%')
-			OR a.email LIKE CONCAT('%',
-			#{keyword}, '%'))
-		</if>
-	</select>
-
-	<!-- 합격/불합격 건수 (요약 카드용) -->
-	<select id="getHistorySummary" resultType="map">
-		SELECT
-		COUNT(*) AS
-		total,
-		SUM(CASE WHEN stage = 'PASSED' THEN 1 ELSE 0 END) AS passed,
-		SUM(CASE WHEN stage = 'REJECTED' THEN 1 ELSE 0 END) AS rejected
-		FROM
-		application
-		WHERE stage IN ('PASSED', 'REJECTED')
-	</select>
 	<select id="getApplication" parameterType="int"
 		resultType="ApplicationVO">
 		SELECT a.*, j.title AS posting_title
@@ -153,7 +84,27 @@
 		#{changedBy}, #{note}, NOW())
 	</insert>
 	<!-- 파이프라인 히스토리 (합격/불합격) -->
-
+	<select id="getHistoryList"
+		resultType="com.ats.project.model.ApplicationVO">
+		SELECT a.application_id, a.applicant_name, a.email,
+		a.career_year, a.stage, a.reject_reason, a.decided_at,
+		a.applied_at,
+		p.title AS posting_title,
+		(SELECT sh.before_stage
+		FROM stage_history sh
+		WHERE sh.application_id = a.application_id
+		AND sh.after_stage = 'REJECTED'
+		ORDER BY sh.changed_at DESC
+		LIMIT 1) AS fail_stage,
+		(SELECT COUNT(*)
+		FROM application a2
+		WHERE a2.email = a.email
+		AND a2.applicant_name = a.applicant_name) AS apply_count
+		FROM application a
+		LEFT JOIN job_posting p ON a.posting_id = p.posting_id
+		WHERE a.stage IN ('PASSED', 'REJECTED')
+		ORDER BY a.decided_at DESC
+	</select>
 	<update id="resetStage" parameterType="int">
 		UPDATE application
 		SET
@@ -161,5 +112,4 @@
 		WHERE
 		application_id = #{id}
 	</update>
-
 </mapper>

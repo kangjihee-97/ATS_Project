@@ -5,8 +5,6 @@ import java.util.List;
 import com.ats.project.model.ApplicationVO;
 import com.ats.project.model.PostingVO;
 import com.ats.project.model.StageHistoryVO;
-import java.util.Map;
-
 
 @Mapper
 public interface ApplicationDAO {
@@ -27,10 +25,4 @@ public interface ApplicationDAO {
 	List<ApplicationVO> getHistoryList();
 
 	int resetStage(int applicationId);
-
-	List<ApplicationVO> getHistoryList(Map<String, Object> params);
-
-	int getHistoryCount(Map<String, Object> params);
-
-	Map<String, Object> getHistorySummary();
 }
