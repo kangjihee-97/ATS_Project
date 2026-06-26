@@ -25,7 +25,6 @@ body {
 	color: #3d1c02
 }
 
-/* 사이드바 */
 .sidebar {
 	width: 230px;
 	min-height: 100vh;
@@ -161,7 +160,6 @@ body {
 	display: block
 }
 
-/* 메인 */
 .main {
 	margin-left: 230px;
 	flex: 1;
@@ -200,7 +198,6 @@ body {
 	border: 1px solid #e8d5c0
 }
 
-/* 요약 카드 */
 .summary-row {
 	display: flex;
 	gap: 14px;
@@ -232,7 +229,6 @@ body {
 	color: #991b1b
 }
 
-/* 툴바 */
 .toolbar {
 	display: flex;
 	justify-content: space-between;
@@ -255,7 +251,6 @@ body {
 	align-items: center
 }
 
-/* 검색 */
 .search-box {
 	display: flex;
 	align-items: center;
@@ -280,7 +275,6 @@ body {
 	color: #c0a080
 }
 
-/* 필터 탭 */
 .filter-tab {
 	padding: 7px 16px;
 	border-radius: 20px;
@@ -290,7 +284,9 @@ body {
 	border: 1.5px solid #e0d0c0;
 	background: #fff;
 	color: #8b6040;
-	transition: all .2s
+	transition: all .2s;
+	text-decoration: none;
+	display: inline-block
 }
 
 .filter-tab:hover {
@@ -315,20 +311,6 @@ body {
 	border-color: #991b1b
 }
 
-/* 정렬 */
-.sort-select {
-	height: 36px;
-	border: 1.5px solid #e0d0c0;
-	border-radius: 9px;
-	padding: 0 10px;
-	font-size: 13px;
-	color: #3d1c02;
-	background: #fff;
-	cursor: pointer;
-	outline: none
-}
-
-/* 테이블 */
 .tbl-wrap {
 	background: #fff;
 	border-radius: 14px;
@@ -354,23 +336,7 @@ body {
 	text-transform: uppercase;
 	letter-spacing: .5px;
 	border-bottom: 1.5px solid #f0e0cc;
-	cursor: pointer;
-	white-space: nowrap;
-	user-select: none
-}
-
-.tbl th:hover {
-	color: #3d1c02
-}
-
-.tbl th .sort-icon {
-	margin-left: 4px;
-	opacity: .4;
-	font-size: 10px
-}
-
-.tbl th.sorted .sort-icon {
-	opacity: 1
+	white-space: nowrap
 }
 
 .tbl td {
@@ -389,7 +355,6 @@ body {
 	border-bottom: none
 }
 
-/* 뱃지 */
 .badge {
 	display: inline-block;
 	padding: 3px 10px;
@@ -426,7 +391,6 @@ body {
 	white-space: nowrap
 }
 
-/* 페이지네이션 */
 .pagination {
 	display: flex;
 	justify-content: center;
@@ -447,7 +411,8 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	transition: all .2s
+	transition: all .2s;
+	text-decoration: none
 }
 
 .page-btn:hover {
@@ -461,12 +426,11 @@ body {
 	border-color: #3d1c02
 }
 
-.page-btn:disabled {
+.page-btn.disabled {
 	opacity: .4;
-	cursor: default
+	pointer-events: none
 }
 
-/* 빈 상태 */
 .empty-state {
 	text-align: center;
 	padding: 60px 20px;
@@ -520,8 +484,8 @@ body {
 			<li><a href="/stats"><span class="ico">📊</span>통계 리포트</a></li>
 			<%
 			if (isMaster) {
-			%><li><a href="/admin/users"><span class="ico">⚙️</span>회원
-					관리</a></li>
+			%>
+			<li><a href="/admin/users"><span class="ico">⚙️</span>회원 관리</a></li>
 			<%
 			}
 			%>
@@ -558,31 +522,27 @@ body {
 
 		<!-- 요약 카드 -->
 		<div class="summary-row">
-			<div class="summary-card summary-total" id="sum-total">전체: 0명</div>
-			<div class="summary-card summary-passed" id="sum-passed">합격: 0명</div>
-			<div class="summary-card summary-rejected" id="sum-rejected">불합격:
-				0명</div>
+			<div class="summary-card summary-total">전체: ${totalCount}명</div>
+			<div class="summary-card summary-passed">합격: ${passedCount}명</div>
+			<div class="summary-card summary-rejected">불합격:
+				${rejectedCount}명</div>
 		</div>
 
 		<!-- 툴바 -->
 		<div class="toolbar">
 			<div class="toolbar-left">
-				<div class="filter-tab active-all" onclick="setFilter('ALL', this)">전체</div>
-				<div class="filter-tab" onclick="setFilter('PASSED', this)">합격</div>
-				<div class="filter-tab" onclick="setFilter('REJECTED', this)">불합격</div>
-				<select class="sort-select" onchange="setSort(this.value)">
-					<option value="decided_desc">확정일 최신순</option>
-					<option value="decided_asc">확정일 오래된순</option>
-					<option value="applied_desc">지원일 최신순</option>
-					<option value="applied_asc">지원일 오래된순</option>
-					<option value="name_asc">이름 오름차순</option>
-					<option value="name_desc">이름 내림차순</option>
-				</select>
+				<a href="/pipeline/history?filter=ALL"
+					class="filter-tab ${currentFilter == 'ALL' ? 'active-all' : ''}">전체</a>
+				<a href="/pipeline/history?filter=PASSED"
+					class="filter-tab ${currentFilter == 'PASSED' ? 'active-passed' : ''}">합격</a>
+				<a href="/pipeline/history?filter=REJECTED"
+					class="filter-tab ${currentFilter == 'REJECTED' ? 'active-rejected' : ''}">불합격</a>
 			</div>
 			<div class="toolbar-right">
 				<div class="search-box">
 					<span>🔍</span> <input type="text" id="searchInput"
-						placeholder="이름, 공고, 이메일 검색" oninput="applyAll()">
+						placeholder="이름, 공고, 이메일 검색"
+						onkeydown="if(event.key==='Enter') doSearch()">
 				</div>
 			</div>
 		</div>
@@ -594,33 +554,26 @@ body {
 					<div class="empty-state">확정된 지원자가 없습니다.</div>
 				</c:when>
 				<c:otherwise>
-					<table class="tbl" id="historyTable">
+					<table class="tbl">
 						<thead>
 							<tr>
 								<th style="width: 50px">번호</th>
-								<th onclick="sortByCol('name')">지원자 <span class="sort-icon">↕</span></th>
-								<th onclick="sortByCol('posting')">공고 <span
-									class="sort-icon">↕</span></th>
+								<th>지원자</th>
+								<th>공고</th>
 								<th>이메일</th>
-								<th onclick="sortByCol('career')">경력 <span
-									class="sort-icon">↕</span></th>
-								<th onclick="sortByCol('stage')">결과 <span class="sort-icon">↕</span></th>
+								<th>경력</th>
+								<th>결과</th>
 								<th>불합격 사유</th>
 								<th>탈락 단계</th>
 								<th>지원 횟수</th>
-								<th onclick="sortByCol('applied')">지원일 <span
-									class="sort-icon">↕</span></th>
-								<th onclick="sortByCol('decided')">확정 시간 <span
-									class="sort-icon">↕</span></th>
+								<th>지원일</th>
+								<th>확정 시간</th>
 							</tr>
 						</thead>
-						<tbody id="historyBody">
+						<tbody>
 							<c:forEach var="h" items="${historyList}" varStatus="st">
-								<tr data-stage="${h.stage}" data-name="${h.applicantName}"
-									data-posting="${h.postingTitle}" data-email="${h.email}"
-									data-career="${h.careerYear}" data-applied="${h.appliedAt}"
-									data-decided="${h.decidedAt}" data-id="${h.applicationId}">
-									<td class="row-num">${st.count}</td>
+								<tr>
+									<td>${(currentPage - 1) * 10 + st.count}</td>
 									<td style="font-weight: 600">${h.applicantName}</td>
 									<td>${h.postingTitle}</td>
 									<td>${h.email}</td>
@@ -672,205 +625,40 @@ body {
 		</div>
 
 		<!-- 페이지네이션 -->
-		<div class="pagination" id="pagination"></div>
+		<div class="pagination">
+			<c:if test="${currentPage > 1}">
+				<a
+					href="/pipeline/history?page=${currentPage-1}&filter=${currentFilter}"
+					class="page-btn">‹</a>
+			</c:if>
+			<c:if test="${currentPage == 1}">
+				<span class="page-btn disabled">‹</span>
+			</c:if>
+
+			<c:forEach begin="1" end="${totalPages}" var="p">
+				<c:if test="${p >= currentPage - 2 and p <= currentPage + 2}">
+					<a href="/pipeline/history?page=${p}&filter=${currentFilter}"
+						class="page-btn ${p == currentPage ? 'active' : ''}">${p}</a>
+				</c:if>
+			</c:forEach>
+
+			<c:if test="${currentPage < totalPages}">
+				<a
+					href="/pipeline/history?page=${currentPage+1}&filter=${currentFilter}"
+					class="page-btn">›</a>
+			</c:if>
+			<c:if test="${currentPage >= totalPages}">
+				<span class="page-btn disabled">›</span>
+			</c:if>
+		</div>
 	</main>
 
 	<script>
-		var PAGE_SIZE = 10;
-		var currentPage = 1;
-		var currentFilter = 'ALL';
-		var currentSort = 'decided_desc';
-		var currentSearch = '';
-		var sortAsc = {};
-
-		var allRows = Array.from(document.querySelectorAll('#historyBody tr'));
-
-		function setFilter(stage, el) {
-			currentFilter = stage;
-			currentPage = 1;
-			document.querySelectorAll('.filter-tab').forEach(function(t) {
-				t.className = 'filter-tab';
-			});
-			if (stage === 'ALL')
-				el.classList.add('active-all');
-			else if (stage === 'PASSED')
-				el.classList.add('active-passed');
-			else if (stage === 'REJECTED')
-				el.classList.add('active-rejected');
-			applyAll();
+		function doSearch() {
+			var keyword = document.getElementById('searchInput').value;
+			window.location.href = '/pipeline/history?filter=${currentFilter}&search='
+					+ encodeURIComponent(keyword);
 		}
-
-		function setSort(val) {
-			currentSort = val;
-			currentPage = 1;
-			applyAll();
-		}
-
-		function sortByCol(col) {
-			sortAsc[col] = !sortAsc[col];
-			var tbody = document.getElementById('historyBody');
-			var rows = Array.from(tbody.querySelectorAll('tr'));
-			rows.sort(function(a, b) {
-				var va, vb;
-				if (col === 'name') {
-					va = a.dataset.name;
-					vb = b.dataset.name;
-				} else if (col === 'posting') {
-					va = a.dataset.posting;
-					vb = b.dataset.posting;
-				} else if (col === 'career') {
-					va = parseInt(a.dataset.career) || 0;
-					vb = parseInt(b.dataset.career) || 0;
-					return sortAsc[col] ? va - vb : vb - va;
-				} else if (col === 'stage') {
-					va = a.dataset.stage;
-					vb = b.dataset.stage;
-				} else if (col === 'applied') {
-					va = a.dataset.applied;
-					vb = b.dataset.applied;
-				} else if (col === 'decided') {
-					va = a.dataset.decided;
-					vb = b.dataset.decided;
-				}
-				if (va < vb)
-					return sortAsc[col] ? -1 : 1;
-				if (va > vb)
-					return sortAsc[col] ? 1 : -1;
-				return 0;
-			});
-			rows.forEach(function(r) {
-				tbody.appendChild(r);
-			});
-			allRows = Array.from(tbody.querySelectorAll('tr'));
-			currentPage = 1;
-			applyAll();
-		}
-
-		function applyAll() {
-			currentSearch = document.getElementById('searchInput').value
-					.toLowerCase();
-
-			var filtered = allRows
-					.filter(function(row) {
-						if (currentFilter !== 'ALL'
-								&& row.dataset.stage !== currentFilter)
-							return false;
-						if (currentSearch) {
-							var text = (row.dataset.name + row.dataset.posting + row.dataset.email)
-									.toLowerCase();
-							if (text.indexOf(currentSearch) === -1)
-								return false;
-						}
-						return true;
-					});
-
-			filtered.sort(function(a, b) {
-				var va, vb;
-				if (currentSort === 'decided_desc'
-						|| currentSort === 'decided_asc') {
-					va = a.dataset.decided;
-					vb = b.dataset.decided;
-				} else if (currentSort === 'applied_desc'
-						|| currentSort === 'applied_asc') {
-					va = a.dataset.applied;
-					vb = b.dataset.applied;
-				} else if (currentSort === 'name_asc'
-						|| currentSort === 'name_desc') {
-					va = a.dataset.name;
-					vb = b.dataset.name;
-				}
-				var desc = currentSort.endsWith('_desc');
-				if (va < vb)
-					return desc ? 1 : -1;
-				if (va > vb)
-					return desc ? -1 : 1;
-				return 0;
-			});
-
-			var total = filtered.length;
-			var totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-			if (currentPage > totalPages)
-				currentPage = totalPages;
-
-			var start = (currentPage - 1) * PAGE_SIZE;
-			var end = start + PAGE_SIZE;
-
-			allRows.forEach(function(r) {
-				r.style.display = 'none';
-			});
-
-			var pageRows = filtered.slice(start, end);
-			pageRows.forEach(function(r, i) {
-				r.style.display = '';
-				r.querySelector('.row-num').textContent = start + i + 1;
-			});
-
-			renderPagination(totalPages);
-			updateSummary(filtered);
-		}
-
-		function renderPagination(totalPages) {
-			var pg = document.getElementById('pagination');
-			pg.innerHTML = '';
-
-			var prev = document.createElement('button');
-			prev.className = 'page-btn';
-			prev.textContent = '‹';
-			prev.disabled = currentPage === 1;
-			prev.onclick = function() {
-				currentPage--;
-				applyAll();
-			};
-			pg.appendChild(prev);
-
-			var start = Math.max(1, currentPage - 2);
-			var end = Math.min(totalPages, start + 4);
-			if (end - start < 4)
-				start = Math.max(1, end - 4);
-
-			for (var i = start; i <= end; i++) {
-				(function(p) {
-					var btn = document.createElement('button');
-					btn.className = 'page-btn'
-							+ (p === currentPage ? ' active' : '');
-					btn.textContent = p;
-					btn.onclick = function() {
-						currentPage = p;
-						applyAll();
-					};
-					pg.appendChild(btn);
-				})(i);
-			}
-
-			var next = document.createElement('button');
-			next.className = 'page-btn';
-			next.textContent = '›';
-			next.disabled = currentPage === totalPages;
-			next.onclick = function() {
-				currentPage++;
-				applyAll();
-			};
-			pg.appendChild(next);
-		}
-
-		function updateSummary(filtered) {
-			var passed = filtered.filter(function(r) {
-				return r.dataset.stage === 'PASSED';
-			}).length;
-			var rejected = filtered.filter(function(r) {
-				return r.dataset.stage === 'REJECTED';
-			}).length;
-			document.getElementById('sum-total').textContent = '전체: '
-					+ filtered.length + '명';
-			document.getElementById('sum-passed').textContent = '합격: ' + passed
-					+ '명';
-			document.getElementById('sum-rejected').textContent = '불합격: '
-					+ rejected + '명';
-		}
-
-		window.onload = function() {
-			applyAll();
-		};
 	</script>
 </body>
 </html>

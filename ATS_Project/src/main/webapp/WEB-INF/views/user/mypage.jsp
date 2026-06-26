@@ -561,7 +561,9 @@ body {
 	<nav class="sidebar">
 		<div class="sb-logo">
 			<div class="sb-logo-row">
-				<img src="/img/vernalis-logo.png" class="sb-logo-img" alt="VERNALIS" />
+				<img src="/img/vernalis-logo.png"
+					style="width: 42px; height: 42px; object-fit: contain; border-radius: 8px; flex-shrink: 0" />
+
 				<div>
 					<div class="sb-logo-name">VERNALIS</div>
 					<div class="sb-logo-sub">Applicant Tracking</div>

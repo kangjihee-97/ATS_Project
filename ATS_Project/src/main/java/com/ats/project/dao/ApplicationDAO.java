@@ -1,6 +1,7 @@
 package com.ats.project.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import java.util.List;
 import com.ats.project.model.ApplicationVO;
 import com.ats.project.model.PostingVO;
@@ -25,4 +26,10 @@ public interface ApplicationDAO {
 	List<ApplicationVO> getHistoryList();
 
 	int resetStage(int applicationId);
+
+	// ✅ @Param 추가
+	int getHistoryCount(@Param("filter") String filter);
+
+	List<ApplicationVO> getHistoryListPaged(@Param("offset") int offset, @Param("size") int size,
+			@Param("filter") String filter);
 }

@@ -59,10 +59,11 @@
 		decided_at = CASE
 		WHEN #{stage} IN ('PASSED','REJECTED') THEN NOW() ELSE NULL
 		END,
-		reject_reason = CASE WHEN #{stage} = 'REJECTED' THEN
-		#{rejectReason}
-		ELSE NULL END
-		WHERE application_id = #{applicationId}
+		reject_reason = CASE
+		WHEN #{stage} = 'REJECTED' THEN #{rejectReason} ELSE NULL
+		END
+		WHERE
+		application_id = #{applicationId}
 	</update>
 
 	<select id="getOpenPostingList" resultType="PostingVO">
@@ -79,16 +80,16 @@
 		stage_history
 		(application_id, before_stage, after_stage, changed_by,
 		note, changed_at)
-		VALUES (#{applicationId}, #{beforeStage},
-		#{afterStage},
-		#{changedBy}, #{note}, NOW())
+		VALUES
+		(#{applicationId}, #{beforeStage},
+		#{afterStage}, #{changedBy}, #{note}, NOW())
 	</insert>
-	<!-- 파이프라인 히스토리 (합격/불합격) -->
+
+	<!-- 파이프라인 히스토리 전체 (기존 유지) -->
 	<select id="getHistoryList"
 		resultType="com.ats.project.model.ApplicationVO">
 		SELECT a.application_id, a.applicant_name, a.email,
-		a.career_year, a.stage, a.reject_reason, a.decided_at,
-		a.applied_at,
+		a.career_year, a.stage, a.reject_reason, a.decided_at, a.applied_at,
 		p.title AS posting_title,
 		(SELECT sh.before_stage
 		FROM stage_history sh
@@ -100,11 +101,61 @@
 		FROM application a2
 		WHERE a2.email = a.email
 		AND a2.applicant_name = a.applicant_name) AS apply_count
-		FROM application a
+		FROM application
+		a
 		LEFT JOIN job_posting p ON a.posting_id = p.posting_id
-		WHERE a.stage IN ('PASSED', 'REJECTED')
+		WHERE a.stage
+		IN ('PASSED', 'REJECTED')
 		ORDER BY a.decided_at DESC
 	</select>
+
+	<!-- ✅ 서버사이드 페이징 히스토리 -->
+	<select id="getHistoryListPaged"
+		resultType="com.ats.project.model.ApplicationVO">
+		SELECT a.application_id, a.applicant_name, a.email,
+		a.career_year,
+		a.stage, a.reject_reason, a.decided_at, a.applied_at,
+		p.title AS
+		posting_title,
+		(SELECT sh.before_stage
+		FROM stage_history sh
+		WHERE sh.application_id = a.application_id
+		AND sh.after_stage = 'REJECTED'
+		ORDER BY sh.changed_at DESC
+		LIMIT 1) AS fail_stage,
+		(SELECT COUNT(*)
+		FROM application a2
+		WHERE a2.email = a.email
+		AND a2.applicant_name = a.applicant_name) AS apply_count
+		FROM application
+		a
+		LEFT JOIN job_posting p ON a.posting_id = p.posting_id
+		WHERE a.stage
+		IN ('PASSED', 'REJECTED')
+		<if test="filter != null and filter == 'PASSED'">
+			AND a.stage = 'PASSED'
+		</if>
+		<if test="filter != null and filter == 'REJECTED'">
+			AND a.stage = 'REJECTED'
+		</if>
+		ORDER BY a.decided_at DESC
+		LIMIT #{size} OFFSET #{offset}
+	</select>
+
+	<!-- ✅ 서버사이드 페이징 카운트 -->
+	<select id="getHistoryCount" resultType="int">
+		SELECT COUNT(*)
+		FROM application a
+		WHERE a.stage IN ('PASSED',
+		'REJECTED')
+		<if test="filter != null and filter == 'PASSED'">
+			AND a.stage = 'PASSED'
+		</if>
+		<if test="filter != null and filter == 'REJECTED'">
+			AND a.stage = 'REJECTED'
+		</if>
+	</select>
+
 	<update id="resetStage" parameterType="int">
 		UPDATE application
 		SET
@@ -112,4 +163,5 @@
 		WHERE
 		application_id = #{id}
 	</update>
+
 </mapper>

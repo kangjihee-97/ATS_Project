@@ -547,7 +547,7 @@ body {
 			</div>
 			<div class="main-copy">
 				<h2>
-					채용의 모든 과정을<br>스마트하게 관리하세요
+					채용의 모든 과정을<br>스마트하게 관리하세요.
 				</h2>
 			</div>
 			<p class="copy-desc">
@@ -556,8 +556,9 @@ body {
 			<ul class="feature-list">
 				<li><span class="feat-dot"></span>채용 파이프라인 단계별 실시간 추적</li>
 				<li><span class="feat-dot"></span>면접 평가서 다면 평가 자동 집계</li>
-				<li><span class="feat-dot"></span>합격·불합격 이메일 자동 발송</li>
-				<li><span class="feat-dot"></span>통계 대시보드 &amp; 엑셀 리포트</li>
+				<li><span class="feat-dot"></span>지원자 이력서 AI 분석 및 평가 코멘트 자동 생성</li>
+				<li><span class="feat-dot"></span>통계 대시보드 PDF 추출 &amp; 엑셀 리포트</li>
+				<li><span class="feat-dot"></span>이메일 2단계 인증 보안 로그인</li>
 			</ul>
 		</div>
 
