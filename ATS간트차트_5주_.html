@@ -1,0 +1,382 @@
+<h2 class="sr-only">채용 지원자 관리 시스템(ATS) 개발 일정 간트차트 — 5주 개발 계획</h2>
+<style>
+.gantt-wrap { padding: 1rem 0; font-size: 13px; }
+.phase-header { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin: 1.2rem 0 0.3rem; display: flex; align-items: center; gap: 8px; }
+.phase-sub { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 0.6rem; }
+.phase-badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 10px; border-radius: 20px; }
+.badge-found  { background: #E6F1FB; color: #185FA5; }
+.badge-core   { background: #ECFDF5; color: #065F46; }
+.badge-adv    { background: #EDE9FE; color: #5B21B6; }
+.badge-final  { background: #FFF7ED; color: #92400E; }
+.gantt-table { width: 100%; border-collapse: collapse; }
+.gantt-table th { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); text-align: center; padding: 4px 2px; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.gantt-table td { padding: 4px 6px; border-bottom: 0.5px solid var(--color-border-tertiary); vertical-align: middle; }
+.task-name { font-size: 12px; color: var(--color-text-primary); white-space: nowrap; min-width: 186px; }
+.task-role { font-size: 11px; color: var(--color-text-secondary); min-width: 68px; }
+.bar-cell { width: 80px; padding: 4px 3px; }
+.bar { height: 16px; border-radius: 3px; }
+.b-navy   { background: #1E3A5F; }
+.b-blue   { background: #2563EB; }
+.b-teal   { background: #0D9488; }
+.b-purple { background: #7C3AED; }
+.b-orange { background: #EA580C; }
+.b-green  { background: #16A34A; }
+.b-red    { background: #DC2626; }
+.b-gray   { background: #64748B; }
+.b-violet { background: #7E22CE; }
+.week-label { font-size: 11px; color: var(--color-text-secondary); text-align: center; }
+.section-divider { border: none; border-top: 1.5px solid var(--color-border-secondary); margin: 1rem 0 0.4rem; }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 1rem; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--color-text-secondary); }
+.legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+.owner-tag { font-size: 10px; padding: 1px 6px; border-radius: 3px; margin-left: 4px; }
+.tag-leader { background: #DBEAFE; color: #1E40AF; }
+.tag-a      { background: #DCFCE7; color: #166534; }
+.tag-b      { background: #EDE9FE; color: #5B21B6; }
+.tag-all    { background: #F1F5F9; color: #475569; }
+.warn-box { background: #FEF3C7; border: 0.5px solid #FCD34D; border-radius: 6px; padding: 7px 12px; font-size: 11px; color: #92400E; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+</style>
+
+<div class="gantt-wrap">
+
+  <div class="warn-box">
+    ⚡ 5주 압축 일정 — 김도현(팀장)이 Week 1 기반 작업을 완료해야 팀원 병렬 개발 가능. 주간 목표 엄수 권장.
+  </div>
+
+  <!-- ── WEEK 1 ── -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.2rem;">
+    <span class="phase-badge badge-found">Week 1</span>
+    <span class="phase-header" style="margin:0;">기반 구축 — 팀장 선행 완성</span>
+  </div>
+  <div class="phase-sub">DB 설계 · Spring Boot 세팅 · 로그인·권한 시스템</div>
+
+  <table class="gantt-table">
+    <thead>
+      <tr>
+        <th style="text-align:left;min-width:186px;">작업 항목</th>
+        <th style="text-align:left;min-width:68px;">담당</th>
+        <th class="week-label">W1</th>
+        <th class="week-label">W2</th>
+        <th class="week-label">W3</th>
+        <th class="week-label">W4</th>
+        <th class="week-label">W5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="task-name">주제 확정 · 역할 분담 · GitHub 세팅</td>
+        <td class="task-role"><span class="owner-tag tag-all">전원</span></td>
+        <td class="bar-cell"><div class="bar b-navy" style="width:40%"></div></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">DB 설계 (ERD · 테이블 명세서 · CREATE)</td>
+        <td class="task-role"><span class="owner-tag tag-leader">김도현</span></td>
+        <td class="bar-cell"><div class="bar b-navy" style="width:100%"></div></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">Spring Boot 3.x 세팅 · 공통 유틸 클래스</td>
+        <td class="task-role"><span class="owner-tag tag-all">전원</span></td>
+        <td class="bar-cell"><div class="bar b-gray" style="width:100%"></div></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">로그인 · 세션 · Interceptor (RBAC) · BCrypt</td>
+        <td class="task-role"><span class="owner-tag tag-leader">김도현</span></td>
+        <td class="bar-cell"><div class="bar b-navy" style="width:100%"></div></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">화면 설계 · 와이어프레임</td>
+        <td class="task-role"><span class="owner-tag tag-all">전원</span></td>
+        <td class="bar-cell"><div class="bar b-gray" style="width:100%"></div></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr class="section-divider">
+
+  <!-- ── WEEK 2 ── -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.2rem;">
+    <span class="phase-badge badge-core">Week 2</span>
+    <span class="phase-header" style="margin:0;">핵심 기능 1 — 3인 병렬 개발 시작</span>
+  </div>
+  <div class="phase-sub">공고 관리 · 지원자 포털 · 파이프라인 로직</div>
+
+  <table class="gantt-table">
+    <thead>
+      <tr>
+        <th style="text-align:left;min-width:186px;">작업 항목</th>
+        <th style="text-align:left;min-width:68px;">담당</th>
+        <th class="week-label">W1</th><th class="week-label">W2</th>
+        <th class="week-label">W3</th><th class="week-label">W4</th><th class="week-label">W5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="task-name">채용 공고 CRUD · 마감 자동 처리</td>
+        <td class="task-role"><span class="owner-tag tag-a">정유한</span></td>
+        <td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-blue" style="width:100%"></div></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td><td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">지원자 셀프 포털 (공고 조회 · 지원서)</td>
+        <td class="task-role"><span class="owner-tag tag-a">정유한</span></td>
+        <td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-blue" style="width:100%"></div></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td><td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">파이프라인 상태 변경 · 이력 기록 (STAGE_HISTORY)</td>
+        <td class="task-role"><span class="owner-tag tag-leader">김도현</span></td>
+        <td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-teal" style="width:100%"></div></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td><td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">면접 평가서 기본 구조 (다대다 관계)</td>
+        <td class="task-role"><span class="owner-tag tag-b">강지희</span></td>
+        <td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-purple" style="width:100%"></div></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td><td class="bar-cell"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr class="section-divider">
+
+  <!-- ── WEEK 3 ── -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.2rem;">
+    <span class="phase-badge badge-core">Week 3</span>
+    <span class="phase-header" style="margin:0;">핵심 기능 2 — 파일·면접·일정 완성</span>
+  </div>
+  <div class="phase-sub">파일 업로드 · 면접 일정 · 평가서 집계 · 검색·필터</div>
+
+  <table class="gantt-table">
+    <thead>
+      <tr>
+        <th style="text-align:left;min-width:186px;">작업 항목</th>
+        <th style="text-align:left;min-width:68px;">담당</th>
+        <th class="week-label">W1</th><th class="week-label">W2</th>
+        <th class="week-label">W3</th><th class="week-label">W4</th><th class="week-label">W5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="task-name">이력서 파일 업로드 (UUID · 확장자 검증)</td>
+        <td class="task-role"><span class="owner-tag tag-leader">김도현</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-teal" style="width:100%"></div></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">Ajax 지원자 검색 · 필터 기능</td>
+        <td class="task-role"><span class="owner-tag tag-a">정유한</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-blue" style="width:100%"></div></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">파이프라인 불합격·면접관 배정 (reject_reason)</td>
+        <td class="task-role"><span class="owner-tag tag-leader">김도현</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-teal" style="width:100%"></div></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">면접 일정 관리 · FullCalendar.js</td>
+        <td class="task-role"><span class="owner-tag tag-b">강지희</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-purple" style="width:100%"></div></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">면접 평가서 집계 · 평균 점수 계산</td>
+        <td class="task-role"><span class="owner-tag tag-b">강지희</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-purple" style="width:100%"></div></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr class="section-divider">
+
+  <!-- ── WEEK 4 ── -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.2rem;">
+    <span class="phase-badge badge-adv">Week 4</span>
+    <span class="phase-header" style="margin:0;">고도화 — 대시보드 · AI 분석 · 히스토리</span>
+  </div>
+  <div class="phase-sub">메인 대시보드 · Gemini AI 분석 · 파이프라인 히스토리 · 통계</div>
+
+  <table class="gantt-table">
+    <thead>
+      <tr>
+        <th style="text-align:left;min-width:186px;">작업 항목</th>
+        <th style="text-align:left;min-width:68px;">담당</th>
+        <th class="week-label">W1</th><th class="week-label">W2</th>
+        <th class="week-label">W3</th><th class="week-label">W4</th><th class="week-label">W5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="task-name">메인 대시보드 (KPI 카드 · 파이프라인)</td>
+        <td class="task-role"><span class="owner-tag tag-leader">김도현</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-teal" style="width:100%"></div></td>
+        <td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">🤖 Gemini AI 지원서 분석 연동</td>
+        <td class="task-role"><span class="owner-tag tag-leader">김도현</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-violet" style="width:100%"></div></td>
+        <td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">파이프라인 히스토리 드롭존 · /pipeline/history</td>
+        <td class="task-role"><span class="owner-tag tag-b">강지희</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-purple" style="width:100%"></div></td>
+        <td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">내 지원 현황 조회 (지원자 화면)</td>
+        <td class="task-role"><span class="owner-tag tag-b">강지희</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-purple" style="width:80%"></div></td>
+        <td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">통계 리포트 (Chart.js · 집계 쿼리)</td>
+        <td class="task-role"><span class="owner-tag tag-a">정유한</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-blue" style="width:100%"></div></td>
+        <td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">엑셀 다운로드 (Apache POI)</td>
+        <td class="task-role"><span class="owner-tag tag-leader">김도현</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-teal" style="width:80%"></div></td>
+        <td class="bar-cell"></td>
+      </tr>
+      <tr>
+        <td class="task-name">마이페이지 · 역할 변경 · 비밀번호 재설정</td>
+        <td class="task-role"><span class="owner-tag tag-a">정유한</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-blue" style="width:80%"></div></td>
+        <td class="bar-cell"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <hr class="section-divider">
+
+  <!-- ── WEEK 5 ── -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:0.2rem;">
+    <span class="phase-badge badge-final">Week 5</span>
+    <span class="phase-header" style="margin:0;">마무리 — 테스트 · 버그 수정 · 발표</span>
+  </div>
+  <div class="phase-sub">통합 테스트 · 디버깅 · PPT · 영상 제작 · AWS 배포</div>
+
+  <table class="gantt-table">
+    <thead>
+      <tr>
+        <th style="text-align:left;min-width:186px;">작업 항목</th>
+        <th style="text-align:left;min-width:68px;">담당</th>
+        <th class="week-label">W1</th><th class="week-label">W2</th>
+        <th class="week-label">W3</th><th class="week-label">W4</th><th class="week-label">W5</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="task-name">통합 테스트 · 시나리오 검증</td>
+        <td class="task-role"><span class="owner-tag tag-all">전원</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-red" style="width:100%"></div></td>
+      </tr>
+      <tr>
+        <td class="task-name">버그 수정 · 코드 디버깅 · UI 정리</td>
+        <td class="task-role"><span class="owner-tag tag-leader">김도현</span><span class="owner-tag tag-a">정유한</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-teal" style="width:80%"></div></td>
+      </tr>
+      <tr>
+        <td class="task-name">발표 PPT 제작 · 시연 시나리오 작성</td>
+        <td class="task-role"><span class="owner-tag tag-a">정유한</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-blue" style="width:100%"></div></td>
+      </tr>
+      <tr>
+        <td class="task-name">시연 영상 녹화 · 편집</td>
+        <td class="task-role"><span class="owner-tag tag-b">강지희</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-purple" style="width:100%"></div></td>
+      </tr>
+      <tr>
+        <td class="task-name">AWS EC2 웹 배포 · 운영 환경 설정</td>
+        <td class="task-role"><span class="owner-tag tag-b">강지희</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-purple" style="width:80%"></div></td>
+      </tr>
+      <tr>
+        <td class="task-name">포트폴리오 정리 · README 작성</td>
+        <td class="task-role"><span class="owner-tag tag-all">전원</span></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"></td><td class="bar-cell"></td>
+        <td class="bar-cell"><div class="bar b-gray" style="width:60%"></div></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 주간 목표 요약 -->
+  <div style="margin-top:1.2rem;padding:10px 14px;background:var(--color-background-secondary);border-radius:8px;border:0.5px solid var(--color-border-tertiary);">
+    <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:8px;">주간 완료 목표 체크리스트</div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;">
+      <div style="font-size:11px;padding:8px;background:var(--color-background-primary);border-radius:6px;border-top:3px solid #1E3A5F;">
+        <div style="font-weight:500;color:#1E3A5F;margin-bottom:4px;">W1 완료 기준</div>
+        <div style="color:var(--color-text-secondary);">로그인·BCrypt 동작<br>DB 테이블 생성<br>GitHub 공유 완료</div>
+      </div>
+      <div style="font-size:11px;padding:8px;background:var(--color-background-primary);border-radius:6px;border-top:3px solid #2563EB;">
+        <div style="font-weight:500;color:#2563EB;margin-bottom:4px;">W2 완료 기준</div>
+        <div style="color:var(--color-text-secondary);">공고 CRUD 동작<br>지원서 제출 가능<br>파이프라인 이동</div>
+      </div>
+      <div style="font-size:11px;padding:8px;background:var(--color-background-primary);border-radius:6px;border-top:3px solid #7C3AED;">
+        <div style="font-weight:500;color:#7C3AED;margin-bottom:4px;">W3 완료 기준</div>
+        <div style="color:var(--color-text-secondary);">파일 업로드 완성<br>평가서 저장 가능<br>검색·필터 동작</div>
+      </div>
+      <div style="font-size:11px;padding:8px;background:var(--color-background-primary);border-radius:6px;border-top:3px solid #0D9488;">
+        <div style="font-weight:500;color:#0D9488;margin-bottom:4px;">W4 완료 기준</div>
+        <div style="color:var(--color-text-secondary);">AI 분석 동작<br>히스토리 페이지<br>대시보드·통계</div>
+      </div>
+      <div style="font-size:11px;padding:8px;background:var(--color-background-primary);border-radius:6px;border-top:3px solid #DC2626;">
+        <div style="font-weight:500;color:#DC2626;margin-bottom:4px;">W5 완료 기준</div>
+        <div style="color:var(--color-text-secondary);">전체 시나리오<br>AWS 배포 완료<br>발표 준비 완료</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#1E3A5F"></div>기반 구축 (김도현)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#0D9488"></div>김도현 (팀장)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2563EB"></div>정유한 (팀원)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7C3AED"></div>강지희 (팀원)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#7E22CE"></div>AI 분석 (Gemini)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#DC2626"></div>통합 테스트</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#64748B"></div>공통 문서화</div>
+  </div>
+</div>
